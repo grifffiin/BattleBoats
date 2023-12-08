@@ -97,6 +97,7 @@ namespace BattleBoats
                 //{
                 //    (oddPlayer, evenPlayer) = (evenPlayer, oddPlayer);
                 //}
+                // swap them using tuples
                 
             }
         }
@@ -147,16 +148,25 @@ namespace BattleBoats
         }
 
 
-        static string[] GetCoodrinates(string coordinates)
+        static int[] GetCoodrinates(string coordinates)
         {
-            // gridsize? -- change multiple things
+            // gridsize? -- change multiple things num cannot be larger than 9
+            int[] arrayCooridnates = new int[2];
             int gridSize = 8;
             coordinates = coordinates.ToUpper();
             if (coordinates == null || coordinates.Length > 2 || coordinates[0] > gridSize || coordinates[1] > 'A' + gridSize)
             {
-                return new string[] {"INVALID COORDINATES"};
+                arrayCooridnates[0] = -1;
+                arrayCooridnates[1] = -1;
+                
             }
-            
+            else
+            {
+                arrayCooridnates[0] = Convert.ToInt32(coordinates[0].ToString());
+
+                arrayCooridnates[1] = Convert.ToInt32((coordinates[1] - 'A').ToString());
+            }
+            return arrayCooridnates;
         }
     }
 }
