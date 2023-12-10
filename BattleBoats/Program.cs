@@ -169,7 +169,7 @@ namespace BattleBoats
             int[] arrayCooridnates = new int[2];
             int gridSize = 8;
             coordinates = coordinates.ToUpper();
-            if (coordinates == "" || coordinates.Length > 2 || coordinates[0] > gridSize || coordinates[1] > ('A' + gridSize))
+            if (coordinates == "" || coordinates.Length > 2 || coordinates[0]-'0' > gridSize || coordinates[1] > ('A' + gridSize))
                 // convert the chars in this if statment to nums it is freaking out at their ascii values!
             {
                 arrayCooridnates[0] = -1;
