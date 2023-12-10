@@ -13,12 +13,14 @@ namespace BattleBoats
             char[,] ownGrid = new char[8, 8];
             char[,] hitsAndMissesGrid = new char[8, 8];
             string mode = "";
-            ownGrid = IntialiseGrid(ownGrid);
+
             DisplayGrid(ownGrid);
             while (mode!= "Wants to quit")
             {
                 mode =DisplayMenu();
             }
+            ownGrid =IntialiseGrid(ownGrid);
+
             int[] arrayCoodinateas = {-1,-1};
             while (arrayCoodinateas[0] == -1) 
             {
@@ -139,6 +141,7 @@ namespace BattleBoats
         }
 
         static char[,] IntialiseGrid(char[,] grid)
+        //playerGrid?
         {
             // if I add different types of boats I am going to have to significantly change this
             int numberOfBoats = 5;
@@ -154,10 +157,19 @@ namespace BattleBoats
 
             string chosenCoordinates = "";
             int[] boatCoordinates = new int[2];
-            for(int i = 0; i < numberOfBoats; i++)
+            int[] inputCoordinates = new int [2];
+            for(int i = 1; i < numberOfBoats; i++)
             {
-                //while (boatCoordinates[0] !=) ;
+                while (boatCoordinates[0] != -1 && grid[inputCoordinates[0],inputCoordinates[1]] != 'B') 
+                // -1 if invalid input coordinates and if they attempt to place one on top of a boat
+                {
+                    Console.WriteLine($"enter your coordinates for the placment of boat number {i} (only place boats in empty spaces):");
+                    inputCoordinates = GetCoodrinates(Console.ReadLine());
+                }
+                grid[inputCoordinates[0],inputCoordinates[1]] = 'B';
+                Console.WriteLine("Boat placed!");
             }
+            DisplayGrid(grid);
 
             return grid;
         }
