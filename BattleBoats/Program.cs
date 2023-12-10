@@ -13,13 +13,25 @@ namespace BattleBoats
             char[,] ownGrid = new char[8, 8];
             char[,] hitsAndMissesGrid = new char[8, 8];
             string mode = "";
-            while(mode!= "Wants to quit")
+            ownGrid = IntialiseGrid(ownGrid);
+            DisplayGrid(ownGrid);
+            while (mode!= "Wants to quit")
             {
                 mode =DisplayMenu();
             }
+            int[] arrayCoodinateas = {-1,-1};
+            while (arrayCoodinateas[0] == -1) 
+            {
+                Console.WriteLine("enter your coordinates:");
+                string coordinate = Console.ReadLine();
+                arrayCoodinateas = GetCoodrinates(coordinate);
+                foreach (int i in arrayCoodinateas) { Console.WriteLine(i); }
+            }
 
-            //ownGrid = IntialiseGrid(ownGrid);
-            //DisplayGrid(ownGrid);
+
+
+
+            Console.WriteLine(ownGrid[arrayCoodinateas[0],arrayCoodinateas[1]]);
         }
 
         static string DisplayMenu()
@@ -65,7 +77,7 @@ namespace BattleBoats
             string gameWon = "not yet";
             string oddPlayer = "player";
             string evenPlayer = "computer";
-            IntialiseGrid();
+            //IntialiseGrid();
 
             while (gameWon != "yes")
             {
@@ -139,9 +151,12 @@ namespace BattleBoats
                 }
             }
 
+
+            string chosenCoordinates = "";
+            int[] boatCoordinates = new int[2];
             for(int i = 0; i < numberOfBoats; i++)
             {
-
+                //while (boatCoordinates[0] !=) ;
             }
 
             return grid;
@@ -154,7 +169,8 @@ namespace BattleBoats
             int[] arrayCooridnates = new int[2];
             int gridSize = 8;
             coordinates = coordinates.ToUpper();
-            if (coordinates == null || coordinates.Length > 2 || coordinates[0] > gridSize || coordinates[1] > 'A' + gridSize)
+            if (coordinates == "" || coordinates.Length > 2 || coordinates[0] > gridSize || coordinates[1] > ('A' + gridSize))
+                // convert the chars in this if statment to nums it is freaking out at their ascii values!
             {
                 arrayCooridnates[0] = -1;
                 arrayCooridnates[1] = -1;
