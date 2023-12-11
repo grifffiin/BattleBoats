@@ -14,7 +14,7 @@ namespace BattleBoats
             char[,] hitsAndMissesGrid = new char[8, 8];
             string mode = "";
 
-            DisplayGrid(ownGrid);
+
             while (mode!= "Wants to quit")
             {
                 mode =DisplayMenu();
@@ -33,7 +33,7 @@ namespace BattleBoats
 
 
 
-            Console.WriteLine(ownGrid[arrayCoodinateas[0],arrayCoodinateas[1]]);
+            //Console.WriteLine(ownGrid[arrayCoodinateas[0],arrayCoodinateas[1]]);
         }
 
         static string DisplayMenu()
@@ -154,22 +154,23 @@ namespace BattleBoats
                 }
             }
 
+            DisplayGrid(grid);
 
-            string chosenCoordinates = "";
-            int[] boatCoordinates = new int[2];
-            int[] inputCoordinates = new int [2];
             for(int i = 1; i < numberOfBoats; i++)
             {
-                while (boatCoordinates[0] != -1 && grid[inputCoordinates[0],inputCoordinates[1]] != 'B') 
+                int[] boatCoordinates = new int[2];
+                int[] inputCoordinates = { -1, -1 };
+                while (inputCoordinates[0] == -1 || grid[inputCoordinates[1],inputCoordinates[0]] == 'B') 
                 // -1 if invalid input coordinates and if they attempt to place one on top of a boat
                 {
-                    Console.WriteLine($"enter your coordinates for the placment of boat number {i} (only place boats in empty spaces):");
+                    Console.WriteLine($"enter your coordinates in the form: NumberLetter for the placment of boat number {i} (only place boats in empty spaces):");
                     inputCoordinates = GetCoodrinates(Console.ReadLine());
                 }
-                grid[inputCoordinates[0],inputCoordinates[1]] = 'B';
+                grid[inputCoordinates[1],inputCoordinates[0]] = 'B';
                 Console.WriteLine("Boat placed!");
+                DisplayGrid(grid);
             }
-            DisplayGrid(grid);
+            
 
             return grid;
         }
@@ -181,7 +182,7 @@ namespace BattleBoats
             int[] arrayCooridnates = new int[2];
             int gridSize = 8;
             coordinates = coordinates.ToUpper();
-            if (coordinates == "" || coordinates.Length > 2 || coordinates[0]-'0' > gridSize || coordinates[1] > ('A' + gridSize))
+            if (coordinates == "" || coordinates.Length > 2 || coordinates[0]-'0' >= gridSize || coordinates[1] >= ('A' + gridSize))
                 // convert the chars in this if statment to nums it is freaking out at their ascii values!
             {
                 arrayCooridnates[0] = -1;
