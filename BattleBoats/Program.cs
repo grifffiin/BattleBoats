@@ -65,6 +65,7 @@ namespace BattleBoats
             }
             return "Wants to continue";
         }
+        
 
 
         static void DisplayInstructions()
@@ -128,6 +129,25 @@ namespace BattleBoats
             }
         }
 
+        static string PlayerTurn(char[,] computerGrid, char[,] ownGrid, char[,] hitsAndMissesGrid)
+        {
+            int[] attackNums = new int[2];
+            Console.WriteLine("Player turn!:");
+            do
+            {
+                Console.WriteLine("Enter the coordinates of where you want to send your missile (in the form numberLetter):");
+                attackNums = GetCoodrinates(Console.ReadLine());
+            } while (attackNums[0] == -1);
+
+            if (computerGrid[attackNums[0],attackNums[1]] == 'b')
+            {
+
+            }
+
+            return new string("");//placeholder
+
+        }
+
         static void DisplayGrid(char[,] grid)
         {
             char startingLetter = 'A';
@@ -153,7 +173,7 @@ namespace BattleBoats
         }
 
         static char[,] IntialisePlayerGrid(char[,] playerGrid)
-        //where do I want to  initialise the computer grid?
+      
         {
             SetBlankGrid(playerGrid);
             // if I add different types of boats I am going to have to significantly change this
