@@ -9,11 +9,12 @@ namespace BattleBoats
         static void Main(string[] args)
         {
         
-
+           
             char[,] ownGrid = new char[8, 8];
             char[,] hitsAndMissesGrid = new char[8, 8];
             char[,] computerGrid = new char[8, 8];
             string mode = "";
+            // just for testing will not be declared in main for the final thing
 
 
             while (mode!= "Wants to quit")
@@ -81,12 +82,21 @@ namespace BattleBoats
             string gameWon = "not yet";
             string oddPlayer = "player";
             string evenPlayer = "computer";
-            //IntialiseGrid();
+            char[,] ownGrid = new char[8, 8];
+            char[,] hitsAndMissesGrid = new char[8, 8];
+            char[,] computerGrid = new char[8, 8];
+            string mode = "";
+
+            ownGrid = IntialisePlayerGrid(ownGrid);
+            computerGrid = IntialiseComputerGrid(computerGrid);
+            hitsAndMissesGrid = SetBlankGrid(hitsAndMissesGrid);
+            // set the grids
 
             while (gameWon != "yes")
             {
                 gameNum++;
                 if (gameNum % 2 == 0) 
+                    // even turn number
                 {
                     if (evenPlayer == "player")
                     {
@@ -145,16 +155,9 @@ namespace BattleBoats
         static char[,] IntialisePlayerGrid(char[,] playerGrid)
         //where do I want to  initialise the computer grid?
         {
+            SetBlankGrid(playerGrid);
             // if I add different types of boats I am going to have to significantly change this
             int numberOfBoats = 5;
-
-            for(int i = 0;i < playerGrid.GetLength(0); i++)
-            {
-                for(int y = 0 ; y < playerGrid.GetLength(1); y++)
-                {
-                    playerGrid[i, y] = '*';
-                }
-            }
 
             DisplayGrid(playerGrid);
 
@@ -181,18 +184,9 @@ namespace BattleBoats
         static char[,] IntialiseComputerGrid(char[,] computerGrid)
         //where do I want to  initialise the computer grid?
         {
+            SetBlankGrid(computerGrid);
             // if I add different types of boats I am going to have to significantly change this
             int numberOfBoats = 5;
-
-            for (int i = 0; i < computerGrid.GetLength(0); i++)
-            {
-                for (int y = 0; y < computerGrid.GetLength(1); y++)
-                {
-                    computerGrid[i, y] = '*';
-                }
-            }
-
-
 
             Random rand = new Random();
 
@@ -216,6 +210,18 @@ namespace BattleBoats
 
   
             return computerGrid;
+        }
+
+        static char[,] SetBlankGrid(char[,] grid)
+        {
+            for (int i = 0; i < grid.GetLength(0); i++)
+            {
+                for (int y = 0; y < grid.GetLength(1); y++)
+                {
+                    grid[i, y] = '*';
+                }
+            }
+            return grid;
         }
 
 
