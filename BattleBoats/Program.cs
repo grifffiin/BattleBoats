@@ -17,20 +17,11 @@ namespace BattleBoats
             // just for testing will not be declared in main for the final thing
 
 
-            //while (mode!= "Wants to quit")
-            //{
-            //    mode =DisplayMenu();
-            //}
-            ownGrid =IntialisePlayerGrid(ownGrid);
-
-            computerGrid = IntialiseComputerGrid(computerGrid);
-
-            hitsAndMissesGrid = SetBlankGrid(hitsAndMissesGrid);
-            for (int i = 0; i < 8; i++)
+            while (mode != "Wants to quit")
             {
-                PlayerTurn(ref computerGrid, ref ownGrid, ref hitsAndMissesGrid);
-            }  // Should I be passing by reference?
-            int[] arrayCoodinateas = {-1,-1};
+                mode = DisplayMenu();
+            }
+
 
 
 
@@ -52,7 +43,7 @@ namespace BattleBoats
             }
             if (mode == "2")
             {
-                //NewGame();
+                NewGame();
             }
             if( mode == "3")
             {
@@ -95,15 +86,17 @@ namespace BattleBoats
             while (gameWon != "yes")
             {
                 gameNum++;
+                string playerWon;
                 if (gameNum % 2 == 0) 
                     // even turn number
                 {
                     if (evenPlayer == "player")
                     {
-                        //playerWon = PlayerTurn();
+                        playerWon = PlayerTurn(ref computerGrid,ref ownGrid,ref hitsAndMissesGrid);
                     }
                     else
                     {
+                        Console.WriteLine("Computer turn ");
                         // ComputerTurn();
                     }
                 }
@@ -111,10 +104,11 @@ namespace BattleBoats
                 {
                     if (oddPlayer == "player")
                     {
-                        //playerWon = PlayerTurn();
+                        playerWon = PlayerTurn(ref computerGrid, ref ownGrid, ref hitsAndMissesGrid);
                     }
                     else
                     {
+                        Console.WriteLine("Computer turn ");
                         // ComputerTurn();
                     }
                 }
@@ -131,18 +125,26 @@ namespace BattleBoats
         static string PlayerTurn(ref char[,] computerGrid,ref char[,] ownGrid, ref char[,] hitsAndMissesGrid)
         {
             int[] attackNums = new int[2];
+            string playerWon = "no";
+
             Console.WriteLine("Player turn! here are your hits and misses:");
             DisplayGrid(hitsAndMissesGrid);
             do
             {
+                if (hitsAndMissesGrid[attackNums[1], attackNums[0]] != '*')
+                {
+                    Console.WriteLine("You've already guessed that square!");
+                }
+
                 Console.WriteLine("Enter the coordinates of where you want to send your missile (in the form numberLetter):");
                 attackNums = GetCoodrinates(Console.ReadLine());
-            } while (attackNums[0] == -1);
+            } while (attackNums[0] == -1 || hitsAndMissesGrid[attackNums[1],attackNums[0]] != '*');
 
             if (computerGrid[attackNums[1],attackNums[0]] == 'B')
             {
                 hitsAndMissesGrid[attackNums[1], attackNums[0]] = 'H';
                 Console.WriteLine("You hit a computer's boat! (and as it was only one square it sank immediatley)");
+                playerWon = "yes";
             }
             else
             {
@@ -150,7 +152,7 @@ namespace BattleBoats
                 Console.WriteLine("You missed!");
             }
 
-            return new string("");//placeholder
+            return playerWon;//placeholder
 
         }
 
