@@ -21,24 +21,17 @@ namespace BattleBoats
             //{
             //    mode =DisplayMenu();
             //}
-            //ownGrid =IntialisePlayerGrid(ownGrid);
+            ownGrid =IntialisePlayerGrid(ownGrid);
 
-            //computerGrid = IntialiseComputerGrid(computerGrid);
+            computerGrid = IntialiseComputerGrid(computerGrid);
 
-            //hitsAndMissesGrid = SetBlankGrid(hitsAndMissesGrid);
-            //for (int i = 0; i < 8; i++)
-            //{
-            //    PlayerTurn(ref computerGrid, ref ownGrid, ref hitsAndMissesGrid);
-            //}  // test player turn logic after iorned out coordinate system
+            hitsAndMissesGrid = SetBlankGrid(hitsAndMissesGrid);
+            for (int i = 0; i < 8; i++)
+            {
+                PlayerTurn(ref computerGrid, ref ownGrid, ref hitsAndMissesGrid);
+            }  // Should I be passing by reference?
             int[] arrayCoodinateas = {-1,-1};
 
-            while (arrayCoodinateas[0] == -1)
-            {
-                Console.WriteLine("enter your coordinates:");
-                string coordinate = Console.ReadLine();
-                arrayCoodinateas = GetCoodrinates(coordinate);
-                foreach (int i in arrayCoodinateas) { Console.WriteLine(i); }
-            }
 
 
 
@@ -146,14 +139,14 @@ namespace BattleBoats
                 attackNums = GetCoodrinates(Console.ReadLine());
             } while (attackNums[0] == -1);
 
-            if (computerGrid[attackNums[0],attackNums[1]] == 'B')
+            if (computerGrid[attackNums[1],attackNums[0]] == 'B')
             {
-                hitsAndMissesGrid[attackNums[0], attackNums[1]] = 'H';
+                hitsAndMissesGrid[attackNums[1], attackNums[0]] = 'H';
                 Console.WriteLine("You hit a computer's boat! (and as it was only one square it sank immediatley)");
             }
             else
             {
-                hitsAndMissesGrid[attackNums[0], attackNums[1]] = 'M';
+                hitsAndMissesGrid[attackNums[1], attackNums[0]] = 'M';
                 Console.WriteLine("You missed!");
             }
 
@@ -264,8 +257,8 @@ namespace BattleBoats
             int[] arrayCooridnates = new int[2];
             int gridSize = 8;
             coordinates = coordinates.ToUpper();
-            if (coordinates == "" || coordinates.Length > 2 || coordinates[0]<='0'||coordinates[0]-'0' >= gridSize || coordinates[1] >= ('A' + gridSize )|| coordinates[1] <= ('A'))
-                // wtf is this line - test it out the wazoo
+            if (coordinates == "" || coordinates.Length > 2 || coordinates[0]<'0'||coordinates[0]-'0' >= gridSize || coordinates[1] >= ('A' + gridSize )|| coordinates[1] < ('A'))
+                // 
             {
                 arrayCooridnates[0] = -1;
                 arrayCooridnates[1] = -1;
