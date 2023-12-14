@@ -17,23 +17,29 @@ namespace BattleBoats
             // just for testing will not be declared in main for the final thing
 
 
-            while (mode!= "Wants to quit")
-            {
-                mode =DisplayMenu();
-            }
-            ownGrid =IntialisePlayerGrid(ownGrid);
+            //while (mode!= "Wants to quit")
+            //{
+            //    mode =DisplayMenu();
+            //}
+            //ownGrid =IntialisePlayerGrid(ownGrid);
 
+            //computerGrid = IntialiseComputerGrid(computerGrid);
+
+            //hitsAndMissesGrid = SetBlankGrid(hitsAndMissesGrid);
+            //for (int i = 0; i < 8; i++)
+            //{
+            //    PlayerTurn(ref computerGrid, ref ownGrid, ref hitsAndMissesGrid);
+            //}  // test player turn logic after iorned out coordinate system
             int[] arrayCoodinateas = {-1,-1};
-            while (arrayCoodinateas[0] == -1) 
+
+            while (arrayCoodinateas[0] == -1)
             {
                 Console.WriteLine("enter your coordinates:");
                 string coordinate = Console.ReadLine();
                 arrayCoodinateas = GetCoodrinates(coordinate);
                 foreach (int i in arrayCoodinateas) { Console.WriteLine(i); }
             }
-            computerGrid = IntialiseComputerGrid(computerGrid);
 
-            
 
 
             //Console.WriteLine(ownGrid[arrayCoodinateas[0],arrayCoodinateas[1]]);
@@ -129,19 +135,26 @@ namespace BattleBoats
             }
         }
 
-        static string PlayerTurn(char[,] computerGrid, char[,] ownGrid, char[,] hitsAndMissesGrid)
+        static string PlayerTurn(ref char[,] computerGrid,ref char[,] ownGrid, ref char[,] hitsAndMissesGrid)
         {
             int[] attackNums = new int[2];
-            Console.WriteLine("Player turn!:");
+            Console.WriteLine("Player turn! here are your hits and misses:");
+            DisplayGrid(hitsAndMissesGrid);
             do
             {
                 Console.WriteLine("Enter the coordinates of where you want to send your missile (in the form numberLetter):");
                 attackNums = GetCoodrinates(Console.ReadLine());
             } while (attackNums[0] == -1);
 
-            if (computerGrid[attackNums[0],attackNums[1]] == 'b')
+            if (computerGrid[attackNums[0],attackNums[1]] == 'B')
             {
-
+                hitsAndMissesGrid[attackNums[0], attackNums[1]] = 'H';
+                Console.WriteLine("You hit a computer's boat! (and as it was only one square it sank immediatley)");
+            }
+            else
+            {
+                hitsAndMissesGrid[attackNums[0], attackNums[1]] = 'M';
+                Console.WriteLine("You missed!");
             }
 
             return new string("");//placeholder
@@ -251,8 +264,8 @@ namespace BattleBoats
             int[] arrayCooridnates = new int[2];
             int gridSize = 8;
             coordinates = coordinates.ToUpper();
-            if (coordinates == "" || coordinates.Length > 2 || coordinates[0]-'0' >= gridSize || coordinates[1] >= ('A' + gridSize))
-                // convert the chars in this if statment to nums it is freaking out at their ascii values!
+            if (coordinates == "" || coordinates.Length > 2 || coordinates[0]<='0'||coordinates[0]-'0' >= gridSize || coordinates[1] >= ('A' + gridSize )|| coordinates[1] <= ('A'))
+                // wtf is this line - test it out the wazoo
             {
                 arrayCooridnates[0] = -1;
                 arrayCooridnates[1] = -1;
