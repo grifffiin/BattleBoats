@@ -62,8 +62,10 @@ namespace BattleBoats
         {
             Console.WriteLine("This is the game of battle boats where you have a 8x8 grid where you can place your boats anywhere within this grid.\n " +
                 "Your opponent is the computer, and they have a similar gird with boats in unknown locations.\n" +
-                " Your aim is to destroy your opponent’s boats before they destroy yours taking turns to guess different locations.\n" +
-                " Select New game to start.");
+                " Your aim is to destroy your opponent’s boats before they destroy yours taking turns to guess different locations to send missiles.\n" +
+                " On your grid your boats are marked as \'B\', boats that have been hit are marked as \'D\'and places where the computer has fired missiles but missed are marked as \'M\'\n" +
+                "On your \'hits and misses\' grid boats you have sucsesfully hit are marked as \'H\' and previous guesses where you have missed are marked as \'M\' \n " +
+                "Select New game to start playing!");
         }
 
 
