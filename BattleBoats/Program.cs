@@ -72,14 +72,15 @@ namespace BattleBoats
         static void NewGame()
         {
             int gameNum = 0;
-            string gameWon = "not yet";
+            string winningPerson = "not yet";
             string oddPlayer = "player";
             string evenPlayer = "computer";
             char[,] playerGrid = new char[8, 8];
             char[,] hitsAndMissesGrid = new char[8, 8];
             char[,] computerGrid = new char[8, 8];
             string mode = "";
-            int sunkBoats = 0;
+            int payerSunkBoats = 0;
+            int computerSunkBoats = 0;
 
 
             playerGrid = IntialisePlayerGrid(playerGrid);
@@ -87,7 +88,7 @@ namespace BattleBoats
             hitsAndMissesGrid = SetBlankGrid(hitsAndMissesGrid);
             // set the grids
 
-            while (gameWon != "yes")
+            while (winningPerson != "player" && winningPerson != "computer")
             {
 
                 string playerWon = "";
@@ -99,24 +100,24 @@ namespace BattleBoats
                 {
                     if (evenPlayer == "player")
                     {
-                        playerWon = PlayerTurn(ref computerGrid,ref hitsAndMissesGrid, ref sunkBoats);
+                        playerWon = PlayerTurn(ref computerGrid,ref hitsAndMissesGrid, ref payerSunkBoats);
                     }
                     else
                     {
                         Console.WriteLine("Computer turn ");
-                        computerWon = ComputerTurn(ref computerGrid, ref playerGrid, ref sunkBoats);
+                        computerWon = ComputerTurn(ref computerGrid, ref playerGrid, ref computerSunkBoats);
                     }
                 }
                 else
                 {
                     if (oddPlayer == "player")
                     {
-                        playerWon = PlayerTurn(ref computerGrid, ref hitsAndMissesGrid, ref sunkBoats);
+                        playerWon = PlayerTurn(ref computerGrid, ref hitsAndMissesGrid, ref payerSunkBoats);
                     }
                     else
                     {
                         Console.WriteLine("Computer turn ");
-                        computerWon = ComputerTurn(ref computerGrid, ref playerGrid, ref sunkBoats);
+                        computerWon = ComputerTurn(ref computerGrid, ref playerGrid, ref computerSunkBoats);
                     }
                 }
 
@@ -126,9 +127,19 @@ namespace BattleBoats
                     (oddPlayer, evenPlayer) = (evenPlayer, oddPlayer);
                 }
                 //swap them using tuples
-
+                if (computerSunkBoats >= 5)
+                {
+                    winningPerson = "computer";
+                }
+                if (payerSunkBoats >= 5)
+                {
+                    winningPerson = "player";
+                }
 
             }
+
+            Console.WriteLine($"the winner was {winningPerson}! who won in {gameNum} turns");
+            /// test this asap
         }
 
         static string PlayerTurn(ref char[,] computerGrid, ref char[,] hitsAndMissesGrid, ref int sunkBoats)
