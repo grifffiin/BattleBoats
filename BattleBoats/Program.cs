@@ -73,21 +73,23 @@ namespace BattleBoats
             string gameWon = "not yet";
             string oddPlayer = "player";
             string evenPlayer = "computer";
-            char[,] ownGrid = new char[8, 8];
+            char[,] playerGrid = new char[8, 8];
             char[,] hitsAndMissesGrid = new char[8, 8];
             char[,] computerGrid = new char[8, 8];
             string mode = "";
             int sunkBoats = 0;
-            string playerWon = "";
-            string computerWon = "";
 
-            ownGrid = IntialisePlayerGrid(ownGrid);
+
+            playerGrid = IntialisePlayerGrid(playerGrid);
             computerGrid = IntialiseComputerGrid(computerGrid);
             hitsAndMissesGrid = SetBlankGrid(hitsAndMissesGrid);
             // set the grids
 
             while (gameWon != "yes")
             {
+
+                string playerWon = "";
+                string computerWon = "";
                 gameNum++;
                 
                 if (gameNum % 2 == 0) 
@@ -95,24 +97,24 @@ namespace BattleBoats
                 {
                     if (evenPlayer == "player")
                     {
-                        playerWon = PlayerTurn(ref computerGrid,ref ownGrid,ref hitsAndMissesGrid, ref sunkBoats);
+                        playerWon = PlayerTurn(ref computerGrid,ref hitsAndMissesGrid, ref sunkBoats);
                     }
                     else
                     {
                         Console.WriteLine("Computer turn ");
-                        // ComputerTurn();
+                        computerWon = ComputerTurn(ref computerGrid, ref playerGrid, ref sunkBoats);
                     }
                 }
                 else
                 {
                     if (oddPlayer == "player")
                     {
-                        playerWon = PlayerTurn(ref computerGrid, ref ownGrid, ref hitsAndMissesGrid, ref sunkBoats);
+                        playerWon = PlayerTurn(ref computerGrid, ref hitsAndMissesGrid, ref sunkBoats);
                     }
                     else
                     {
                         Console.WriteLine("Computer turn ");
-                        // ComputerTurn();
+                        computerWon = ComputerTurn(ref computerGrid, ref playerGrid, ref sunkBoats);
                     }
                 }
 
@@ -127,24 +129,28 @@ namespace BattleBoats
             }
         }
 
-        static string PlayerTurn(ref char[,] computerGrid,ref char[,] ownGrid, ref char[,] hitsAndMissesGrid, ref int sunkBoats)
+        static string PlayerTurn(ref char[,] computerGrid, ref char[,] hitsAndMissesGrid, ref int sunkBoats)
         {
-            int[] attackNums = new int[2];
+            int[] attackNums = {-1,-1};
             string playerwon = "no";
             
 
             Console.WriteLine("Player turn! here are your hits and misses:");
             DisplayGrid(hitsAndMissesGrid);
-            do
+            while (attackNums[0] == -1 ) 
+                // -1 means an invalid coordinate
             {
-                if (hitsAndMissesGrid[attackNums[1], attackNums[0]] != '*')
-                {
-                    Console.WriteLine("You've already guessed that square!");
-                }
 
                 Console.WriteLine("Enter the coordinates of where you want to send your missile (in the form numberLetter):");
                 attackNums = GetCoodrinates(Console.ReadLine());
-            } while (attackNums[0] == -1 || hitsAndMissesGrid[attackNums[1],attackNums[0]] != '*');
+
+                if (attackNums[0] != -1 && hitsAndMissesGrid[attackNums[1], attackNums[0]] != '*')
+                {
+                    Console.WriteLine("You've already guessed that square!");
+                    attackNums[0] = -1;
+                    attackNums[1] = -1;
+                }
+            }
 
             if (computerGrid[attackNums[1],attackNums[0]] == 'B')
             {
@@ -164,6 +170,40 @@ namespace BattleBoats
 
             return playerwon;
 
+        }
+
+        static string ComputerTurn(ref char[,] computerGrid, ref char[,] playerGrid, ref int sunkBoats)
+        {
+            int[] attackNums = new int[2];
+            string computerWon = "no";
+            Random rand = new Random();
+            Console.WriteLine("Computer turn! :");
+            do
+            {
+                attackNums[1] = rand.Next(computerGrid.GetLength(0));
+                attackNums[0] = rand.Next(computerGrid.GetLength(1));
+            }
+            while (playerGrid[attackNums[1], attackNums[0]] == 'D' || playerGrid[attackNums[1], attackNums[0]] == 'M');
+
+            if (playerGrid[attackNums[1], attackNums[0]] == 'B')
+            {
+                playerGrid[attackNums[1], attackNums[0]] = 'D';
+                Console.WriteLine("the computer hit one of your boats! (and as it was only one square it sank immediatley)");
+                DisplayGrid(playerGrid);
+                Console.WriteLine("The computer gets and extra go!");
+                sunkBoats++;
+                computerWon = "yes";
+
+
+            }
+            else
+            {
+                playerGrid[attackNums[1], attackNums[0]] = 'M';
+                Console.WriteLine("the computer sent a missile but it missed!");
+                DisplayGrid(playerGrid);
+            }
+
+            return computerWon;
         }
 
         static void DisplayGrid(char[,] grid)
@@ -230,18 +270,16 @@ namespace BattleBoats
 
             for (int i = 1; i <= numberOfBoats; i++)
             {
-                int[] boatCoordinates = new int[2];
-                int[] inputCoordinates = new int[2];
+                int[] Coordinates = new int[2];
                 do 
-                // -1 if invalid input coordinates and if they attempt to place one on top of a boat
                 {
-                    inputCoordinates[1] = rand.Next(computerGrid.GetLength(0));
-                    inputCoordinates[0] = rand.Next(computerGrid.GetLength(1));
+                    Coordinates[1] = rand.Next(computerGrid.GetLength(0));
+                    Coordinates[0] = rand.Next(computerGrid.GetLength(1));
                 }
-                while (computerGrid[inputCoordinates[1], inputCoordinates[0]] == 'B') ;
+                while (computerGrid[Coordinates[1], Coordinates[0]] == 'B') ;
 
 
-                computerGrid[inputCoordinates[1], inputCoordinates[0]] = 'B';
+                computerGrid[Coordinates[1], Coordinates[0]] = 'B';
                 Console.WriteLine("Boat placed! on computer");
                 DisplayGrid(computerGrid);
             }
