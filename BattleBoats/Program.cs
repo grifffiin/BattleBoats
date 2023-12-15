@@ -77,6 +77,9 @@ namespace BattleBoats
             char[,] hitsAndMissesGrid = new char[8, 8];
             char[,] computerGrid = new char[8, 8];
             string mode = "";
+            int sunkBoats = 0;
+            string playerWon = "";
+            string computerWon = "";
 
             ownGrid = IntialisePlayerGrid(ownGrid);
             computerGrid = IntialiseComputerGrid(computerGrid);
@@ -86,13 +89,13 @@ namespace BattleBoats
             while (gameWon != "yes")
             {
                 gameNum++;
-                string playerWon;
+                
                 if (gameNum % 2 == 0) 
                     // even turn number
                 {
                     if (evenPlayer == "player")
                     {
-                        playerWon = PlayerTurn(ref computerGrid,ref ownGrid,ref hitsAndMissesGrid);
+                        playerWon = PlayerTurn(ref computerGrid,ref ownGrid,ref hitsAndMissesGrid, ref sunkBoats);
                     }
                     else
                     {
@@ -104,7 +107,7 @@ namespace BattleBoats
                 {
                     if (oddPlayer == "player")
                     {
-                        playerWon = PlayerTurn(ref computerGrid, ref ownGrid, ref hitsAndMissesGrid);
+                        playerWon = PlayerTurn(ref computerGrid, ref ownGrid, ref hitsAndMissesGrid, ref sunkBoats);
                     }
                     else
                     {
@@ -113,19 +116,22 @@ namespace BattleBoats
                     }
                 }
 
-                //if (plaerWon == "yes")
-                //{
-                //    (oddPlayer, evenPlayer) = (evenPlayer, oddPlayer);
-                //}
-                // swap them using tuples
-                
+                if (playerWon == "yes" || computerWon == "yes" )
+                    
+                {
+                    (oddPlayer, evenPlayer) = (evenPlayer, oddPlayer);
+                }
+                //swap them using tuples
+
+
             }
         }
 
-        static string PlayerTurn(ref char[,] computerGrid,ref char[,] ownGrid, ref char[,] hitsAndMissesGrid)
+        static string PlayerTurn(ref char[,] computerGrid,ref char[,] ownGrid, ref char[,] hitsAndMissesGrid, ref int sunkBoats)
         {
             int[] attackNums = new int[2];
-            string playerWon = "no";
+            string playerwon = "no";
+            
 
             Console.WriteLine("Player turn! here are your hits and misses:");
             DisplayGrid(hitsAndMissesGrid);
@@ -144,7 +150,11 @@ namespace BattleBoats
             {
                 hitsAndMissesGrid[attackNums[1], attackNums[0]] = 'H';
                 Console.WriteLine("You hit a computer's boat! (and as it was only one square it sank immediatley)");
-                playerWon = "yes";
+                Console.WriteLine("You get an extra go !");
+                sunkBoats++;
+                playerwon = "yes";
+
+
             }
             else
             {
@@ -152,7 +162,7 @@ namespace BattleBoats
                 Console.WriteLine("You missed!");
             }
 
-            return playerWon;//placeholder
+            return playerwon;
 
         }
 
