@@ -76,7 +76,7 @@ namespace BattleBoats
         //    string winningPerson = "not yet";//
         //    string oddPlayer = "player";
         //    string evenPlayer = "computer";
-        //    int payerSunkBoats = 0;
+        //    int playerSunkBoats = 0;
         //    int computerSunkBoats = 0;
         //    char[,] playerGrid = new char[8, 8];
         //    char[,] hitsAndMissesGrid = new char[8, 8];
@@ -88,6 +88,11 @@ namespace BattleBoats
         //        gameNum = Convert.ToInt32(reader.ReadLine());
         //        oddPlayer = reader.ReadLine();
         //        evenPlayer = reader.ReadLine();
+        //        playerSunkBoats = Convert.ToInt32(reader.ReadLine());
+        //        computerSunkBoats = Convert.ToInt32(reader.ReadLine()) ;
+        //        string arrayLine = reader.ReadLine();
+        //        arrayLine.Remove(0,1); // remove the leading comma to prevent empty array field
+        //        playerGrid = arrayLine.ToCharArray();
 
         //    }
         //}
@@ -103,21 +108,32 @@ namespace BattleBoats
                 writer.WriteLine(evenPlayer);
                 writer.WriteLine(playerSunkBoats);
                 writer.WriteLine(computerSunkBoats);
-                foreach (char c in playerGrid)
+                for (int i = 0;i<playerGrid.GetLength(0);i++)
                 {
-                    writer.Write(","+c);
+                    for (int j = 0; j < playerGrid.GetLength(1); j++)
+                    {
+                        writer.Write(playerGrid[i,j]);
+                    }
+                    writer.WriteLine();
                 }
-                writer.Write('\n');
-                foreach (char c in hitsAndMissesGrid)
+                writer.WriteLine();
+                for (int i = 0; i < hitsAndMissesGrid.GetLength(0); i++)
                 {
-                    writer.Write(","+c);
+                    for (int j = 0; j < hitsAndMissesGrid.GetLength(1); j++)
+                    {
+                        writer.Write(hitsAndMissesGrid[i, j]);
+                    }
+                    writer.WriteLine();
                 }
-                writer.Write("\n");
-                foreach (char c in computerGrid)
+                writer.WriteLine();
+                for (int i = 0; i < computerGrid.GetLength(0); i++)
                 {
-                    writer.Write(","+c);
+                    for (int j = 0; j < computerGrid.GetLength(1); j++)
+                    {
+                        writer.Write(computerGrid[i, j]);
+                    }
+                    writer.WriteLine();
                 }
-                writer.Write('\n');
             }
         }
         static void Game()
