@@ -8,21 +8,23 @@ namespace BattleBoats
     {
         static void Main(string[] args)
         {
-        
-           
-            char[,] ownGrid = new char[8, 8];
+
+
+            int gameNum = 0;
+            string winningPerson = "not yet";//
+            string oddPlayer = "player";
+            string evenPlayer = "computer";
+            char[,] playerGrid = new char[8, 8];
             char[,] hitsAndMissesGrid = new char[8, 8];
             char[,] computerGrid = new char[8, 8];
-            string mode = "";
-            // just for testing will not be declared in main for the final thing
+            int payerSunkBoats = 0;
+            int computerSunkBoats = 0;
 
+            playerGrid = IntialiseComputerGrid(playerGrid);// set random boats for testing
+            computerGrid = IntialiseComputerGrid(computerGrid);
+            hitsAndMissesGrid = SetBlankGrid(hitsAndMissesGrid);
 
-            while (mode != "Wants to quit")
-            {
-                mode = DisplayMenu();
-            }
-
-
+            WriteGame(gameNum, oddPlayer, evenPlayer, playerGrid, hitsAndMissesGrid, computerGrid, payerSunkBoats, computerSunkBoats);
 
 
 
@@ -43,7 +45,7 @@ namespace BattleBoats
             }
             if (mode == "2")
             {
-                NewGame();
+                Game();
             }
             if( mode == "3")
             {
@@ -68,19 +70,67 @@ namespace BattleBoats
                 "Select New game to start playing!");
         }
 
+        //static void LoadGame()
+        //{
+        //    int gameNum = 0;
+        //    string winningPerson = "not yet";//
+        //    string oddPlayer = "player";
+        //    string evenPlayer = "computer";
+        //    int payerSunkBoats = 0;
+        //    int computerSunkBoats = 0;
+        //    char[,] playerGrid = new char[8, 8];
+        //    char[,] hitsAndMissesGrid = new char[8, 8];
+        //    char[,] computerGrid = new char[8, 8];
 
-        static void NewGame()
+        //    string filePath = "savedGame.txt";
+        //    using (StreamReader reader = new StreamReader(File.Open(filePath, FileMode.Open)))
+        //    {
+        //        gameNum = Convert.ToInt32(reader.ReadLine());
+        //        oddPlayer = reader.ReadLine();
+        //        evenPlayer = reader.ReadLine();
+
+        //    }
+        //}
+
+        static void WriteGame(int gameNum,string oddPlayer,string evenPlayer, char[,] playerGrid , char[,] hitsAndMissesGrid , char[,] computerGrid,int playerSunkBoats,int computerSunkBoats)
+        {
+            string filePath = "savedGame.txt";
+            // should probably ask for the file path?
+            using (StreamWriter writer = new StreamWriter(File.Open(filePath,FileMode.Create)))
+            {
+                writer.WriteLine(gameNum);
+                writer.WriteLine(oddPlayer);
+                writer.WriteLine(evenPlayer);
+                writer.WriteLine(playerSunkBoats);
+                writer.WriteLine(computerSunkBoats);
+                foreach (char c in playerGrid)
+                {
+                    writer.Write(","+c);
+                }
+                writer.Write('\n');
+                foreach (char c in hitsAndMissesGrid)
+                {
+                    writer.Write(","+c);
+                }
+                writer.Write("\n");
+                foreach (char c in computerGrid)
+                {
+                    writer.Write(","+c);
+                }
+                writer.Write('\n');
+            }
+        }
+        static void Game()
         {
             int gameNum = 0;
-            string winningPerson = "not yet";
+            string winningPerson = "not yet";//
             string oddPlayer = "player";
             string evenPlayer = "computer";
+            int payerSunkBoats = 0;
+            int computerSunkBoats = 0;
             char[,] playerGrid = new char[8, 8];
             char[,] hitsAndMissesGrid = new char[8, 8];
             char[,] computerGrid = new char[8, 8];
-            string mode = "";
-            int payerSunkBoats = 0;
-            int computerSunkBoats = 0;
 
 
             playerGrid = IntialisePlayerGrid(playerGrid);
