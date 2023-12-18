@@ -25,7 +25,7 @@ namespace BattleBoats
             hitsAndMissesGrid = SetBlankGrid(hitsAndMissesGrid);
 
             WriteGame(gameNum, oddPlayer, evenPlayer, playerGrid, hitsAndMissesGrid, computerGrid, payerSunkBoats, computerSunkBoats);
-
+            LoadGame();
 
 
             //Console.WriteLine(ownGrid[arrayCoodinateas[0],arrayCoodinateas[1]]);
@@ -70,32 +70,50 @@ namespace BattleBoats
                 "Select New game to start playing!");
         }
 
-        //static void LoadGame()
-        //{
-        //    int gameNum = 0;
-        //    string winningPerson = "not yet";//
-        //    string oddPlayer = "player";
-        //    string evenPlayer = "computer";
-        //    int playerSunkBoats = 0;
-        //    int computerSunkBoats = 0;
-        //    char[,] playerGrid = new char[8, 8];
-        //    char[,] hitsAndMissesGrid = new char[8, 8];
-        //    char[,] computerGrid = new char[8, 8];
+        static void LoadGame()
+        {
+            int gameNum = 0;
+            string oddPlayer = "";
+            string evenPlayer = "";
+            int playerSunkBoats = 0;
+            int computerSunkBoats = 0;
+            char[,] playerGrid = new char[8, 8];
+            char[,] hitsAndMissesGrid = new char[8, 8];
+            char[,] computerGrid = new char[8, 8];
+            char[][,] grids = { playerGrid, hitsAndMissesGrid, computerGrid };
 
-        //    string filePath = "savedGame.txt";
-        //    using (StreamReader reader = new StreamReader(File.Open(filePath, FileMode.Open)))
-        //    {
-        //        gameNum = Convert.ToInt32(reader.ReadLine());
-        //        oddPlayer = reader.ReadLine();
-        //        evenPlayer = reader.ReadLine();
-        //        playerSunkBoats = Convert.ToInt32(reader.ReadLine());
-        //        computerSunkBoats = Convert.ToInt32(reader.ReadLine()) ;
-        //        string arrayLine = reader.ReadLine();
-        //        arrayLine.Remove(0,1); // remove the leading comma to prevent empty array field
-        //        playerGrid = arrayLine.ToCharArray();
+            string filePath = "savedGame.txt";
+            using (StreamReader reader = new StreamReader(File.Open(filePath, FileMode.Open)))
+            {
+                
+                gameNum = Convert.ToInt32(reader.ReadLine());
+                oddPlayer = reader.ReadLine();
+                evenPlayer = reader.ReadLine();
+                playerSunkBoats = Convert.ToInt32(reader.ReadLine());
+                computerSunkBoats = Convert.ToInt32(reader.ReadLine());
+                for (int f = 0; f < grids.Length; f++)
+                {
+                    for (int i = 0; i < grids[f].GetLength(0); i++)
+                    {
+                        string line = reader.ReadLine();
+                        Console.WriteLine(line);//
+                        for (int j = 0; j < grids[f].GetLength(1); j++)
+                        {
+                            grids[f][i, j] = line[j];
+                        }
 
-        //    }
-        //}
+                    }
+                    reader.ReadLine(); // skip a line . should I keep it for readability?
+                }
+
+            }
+            Console.WriteLine($"game num {gameNum}");
+            Console.WriteLine($"even player {oddPlayer}");
+            Console.WriteLine($"even player {evenPlayer}");
+            DisplayGrid(playerGrid);
+            DisplayGrid(hitsAndMissesGrid);
+            DisplayGrid(computerGrid);
+        }
 
         static void WriteGame(int gameNum,string oddPlayer,string evenPlayer, char[,] playerGrid , char[,] hitsAndMissesGrid , char[,] computerGrid,int playerSunkBoats,int computerSunkBoats)
         {
@@ -139,7 +157,6 @@ namespace BattleBoats
         static void Game()
         {
             int gameNum = 0;
-            string winningPerson = "not yet";//
             string oddPlayer = "player";
             string evenPlayer = "computer";
             int payerSunkBoats = 0;
@@ -148,7 +165,7 @@ namespace BattleBoats
             char[,] hitsAndMissesGrid = new char[8, 8];
             char[,] computerGrid = new char[8, 8];
 
-
+            string winningPerson = "not yet";//
             playerGrid = IntialisePlayerGrid(playerGrid);
             computerGrid = IntialiseComputerGrid(computerGrid);
             hitsAndMissesGrid = SetBlankGrid(hitsAndMissesGrid);
