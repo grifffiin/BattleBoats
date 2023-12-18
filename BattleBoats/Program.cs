@@ -118,6 +118,7 @@ namespace BattleBoats
         static void WriteGame(int gameNum,string oddPlayer,string evenPlayer, char[,] playerGrid , char[,] hitsAndMissesGrid , char[,] computerGrid,int playerSunkBoats,int computerSunkBoats)
         {
             string filePath = "savedGame.txt";
+            char[][,] grids = { playerGrid, hitsAndMissesGrid, computerGrid};
             // should probably ask for the file path?
             using (StreamWriter writer = new StreamWriter(File.Open(filePath,FileMode.Create)))
             {
@@ -126,32 +127,19 @@ namespace BattleBoats
                 writer.WriteLine(evenPlayer);
                 writer.WriteLine(playerSunkBoats);
                 writer.WriteLine(computerSunkBoats);
-                for (int i = 0;i<playerGrid.GetLength(0);i++)
+                for (int f = 0; f < grids.Length; f++)
                 {
-                    for (int j = 0; j < playerGrid.GetLength(1); j++)
+                    for (int i = 0; i < grids[f].GetLength(0); i++)
                     {
-                        writer.Write(playerGrid[i,j]);
+                        for (int j = 0; j < grids[f].GetLength(1); j++)
+                        {
+                            writer.Write(grids[f][i, j]);
+                        }
+                        writer.WriteLine();// new line
                     }
-                    writer.WriteLine();
+                    writer.WriteLine();//new line
                 }
-                writer.WriteLine();
-                for (int i = 0; i < hitsAndMissesGrid.GetLength(0); i++)
-                {
-                    for (int j = 0; j < hitsAndMissesGrid.GetLength(1); j++)
-                    {
-                        writer.Write(hitsAndMissesGrid[i, j]);
-                    }
-                    writer.WriteLine();
-                }
-                writer.WriteLine();
-                for (int i = 0; i < computerGrid.GetLength(0); i++)
-                {
-                    for (int j = 0; j < computerGrid.GetLength(1); j++)
-                    {
-                        writer.Write(computerGrid[i, j]);
-                    }
-                    writer.WriteLine();
-                }
+
             }
         }
         static void Game()
