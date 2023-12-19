@@ -47,7 +47,7 @@ namespace BattleBoats
             }
             if( mode == "3")
             {
-                //LoadGame()
+                LoadGame();
             }
             if(mode == "4")
             {
@@ -108,7 +108,7 @@ namespace BattleBoats
             }
             Console.WriteLine("game loaded!");
             // if the file is not in the very specifc format the reader will freak out (make steps to not be editable by the user?) 
-            //Game(gameNum, oddPlayer, evenPlayer, playerSunkBoats, computerSunkBoats, playerGrid, hitsAndMissesGrid, computerGrid);
+            Game(gameNum, oddPlayer, evenPlayer, playerSunkBoats, computerSunkBoats, playerGrid, hitsAndMissesGrid, computerGrid);
 
         }
 
