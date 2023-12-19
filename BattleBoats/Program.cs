@@ -31,7 +31,8 @@ namespace BattleBoats
 
         static string DisplayMenu()
         {
-            Console.WriteLine("Type the number for the option you want: \n" +
+            Console.WriteLine(
+                "Type the number for the option you want: \n" +
                 "1. Show the instructions\n" +
                 "2. Start a new game\n" +
                 "3. Load game from a file\n" +
@@ -95,7 +96,6 @@ namespace BattleBoats
                     for (int i = 0; i < grids[f].GetLength(0); i++)
                     {
                         string line = reader.ReadLine();
-                        Console.WriteLine(line);//
                         for (int j = 0; j < grids[f].GetLength(1); j++)
                         {
                             grids[f][i, j] = line[j];
@@ -107,17 +107,16 @@ namespace BattleBoats
 
             }
             Console.WriteLine("game loaded!");
-            // if the file is not in the very specifc format the reader will freak out (make steps to not be editable by the user?) 
             Game(gameNum, oddPlayer, evenPlayer, playerSunkBoats, computerSunkBoats, playerGrid, hitsAndMissesGrid, computerGrid);
 
         }
 
-        static void WriteGame(int gameNum,string oddPlayer,string evenPlayer, char[,] playerGrid , char[,] hitsAndMissesGrid , char[,] computerGrid,int playerSunkBoats,int computerSunkBoats)
+        static void WriteGame(int gameNum, string oddPlayer, string evenPlayer, char[,] playerGrid, char[,] hitsAndMissesGrid, char[,] computerGrid, int playerSunkBoats, int computerSunkBoats)
         {
             string filePath = "savedGame.txt";
-            char[][,] grids = { playerGrid, hitsAndMissesGrid, computerGrid};
+            char[][,] grids = { playerGrid, hitsAndMissesGrid, computerGrid };
             // should probably ask for the file path?
-            using (StreamWriter writer = new StreamWriter(File.Open(filePath,FileMode.Create)))
+            using (StreamWriter writer = new StreamWriter(File.Open(filePath, FileMode.Create)))
             {
                 writer.WriteLine(gameNum);
                 writer.WriteLine(oddPlayer);
@@ -138,6 +137,8 @@ namespace BattleBoats
                 }
 
             }
+            Console.WriteLine($"Game wirtten to file! in {filePath}");
+
         }
 
         static void NewGame()
@@ -161,9 +162,10 @@ namespace BattleBoats
         static void Game(int gameNum, string oddPlayer , string evenPlayer, int playerSunkBoats , int computerSunkBoats, char[,] playerGrid , char[,] hitsAndMissesGrid, char[,] computerGrid)
         {
 
-            string winningPerson = "not yet";//
+            string gameState = "not yet";//
+            string gameSaved = "not yet";
 
-            while (winningPerson != "player" && winningPerson != "computer")
+            while (gameState != "playerWonRound" && gameState != "computerWonRound" && gameState != "saved")
             {
 
                 string playerWon = "";
@@ -193,7 +195,15 @@ namespace BattleBoats
                     {
                         Console.WriteLine("Computer turn ");
                         computerWon = ComputerTurn(ref computerGrid, ref playerGrid, ref computerSunkBoats);
+                        // is there a reason I am passing by reference
                     }
+                }
+
+                if (playerWon == "save")
+                {
+                    WriteGame(gameNum, oddPlayer, evenPlayer, playerGrid, hitsAndMissesGrid, computerGrid, playerSunkBoats, computerSunkBoats);
+                    gameState = "saved";
+
                 }
 
                 if (playerWon == "yes" || computerWon == "yes" )
@@ -204,16 +214,16 @@ namespace BattleBoats
                 //swap them using tuples
                 if (computerSunkBoats >= 5)
                 {
-                    winningPerson = "computer";
+                    gameState = "computerWonRound";
                 }
                 if (playerSunkBoats >= 5)
                 {
-                    winningPerson = "player";
+                    gameState = "playerWonRound";
                 }
 
             }
 
-            Console.WriteLine($"the winner was {winningPerson}! who won in {gameNum} turns");
+            Console.WriteLine($"the winner was {gameState}! who won in {gameNum} turns");
             /// test this asap
         }
 
@@ -223,14 +233,22 @@ namespace BattleBoats
             string playerwon = "no";
             
 
-            Console.WriteLine("Player turn! here are your hits and misses:");
+            Console.WriteLine("Player turn!\n  " +
+                " here are your hits and misses:");
             DisplayGrid(hitsAndMissesGrid);
             while (attackNums[0] == -1 ) 
                 // -1 means an invalid coordinate
             {
 
-                Console.WriteLine("Enter the coordinates of where you want to send your missile (in the form numberLetter):");
-                attackNums = GetCoodrinates(Console.ReadLine());
+                Console.WriteLine("Enter the coordinates of where you want to send your missile (in the form numberLetter) or type save to save to a file");
+                string input = Console.ReadLine();
+
+                if(input == "save")
+                {
+                    return new string("save");
+                }
+
+                attackNums = GetCoodrinates(input);
 
                 if (attackNums[0] != -1 && hitsAndMissesGrid[attackNums[1], attackNums[0]] != '*')
                 {
