@@ -10,22 +10,20 @@ namespace BattleBoats
         {
 
 
-            int gameNum = 0;
-            string winningPerson = "not yet";//
-            string oddPlayer = "player";
-            string evenPlayer = "computer";
-            char[,] playerGrid = new char[8, 8];
-            char[,] hitsAndMissesGrid = new char[8, 8];
-            char[,] computerGrid = new char[8, 8];
-            int payerSunkBoats = 0;
-            int computerSunkBoats = 0;
+            string mode = "Wants to continue";
+            while (mode == "Wants to continue")
+            {
+                mode = DisplayMenu();
+            }
 
-            playerGrid = IntialiseComputerGrid(playerGrid);// set random boats for testing
-            computerGrid = IntialiseComputerGrid(computerGrid);
-            hitsAndMissesGrid = SetBlankGrid(hitsAndMissesGrid);
 
-            WriteGame(gameNum, oddPlayer, evenPlayer, playerGrid, hitsAndMissesGrid, computerGrid, payerSunkBoats, computerSunkBoats);
-            LoadGame();
+
+            //playerGrid = IntialiseComputerGrid(playerGrid);// set random boats for testing
+            //computerGrid = IntialiseComputerGrid(computerGrid);
+            //hitsAndMissesGrid = SetBlankGrid(hitsAndMissesGrid);
+
+            //WriteGame(gameNum, oddPlayer, evenPlayer, playerGrid, hitsAndMissesGrid, computerGrid, payerSunkBoats, computerSunkBoats);
+            //LoadGame();
 
 
             //Console.WriteLine(ownGrid[arrayCoodinateas[0],arrayCoodinateas[1]]);
@@ -45,7 +43,7 @@ namespace BattleBoats
             }
             if (mode == "2")
             {
-                Game();
+                NewGame();
             }
             if( mode == "3")
             {
@@ -71,6 +69,7 @@ namespace BattleBoats
         }
 
         static void LoadGame()
+            // mabey break this subroutine up?
         {
             int gameNum = 0;
             string oddPlayer = "";
@@ -103,16 +102,14 @@ namespace BattleBoats
                         }
 
                     }
-                    reader.ReadLine(); // skip a line . should I keep it for readability?
+                    reader.ReadLine(); // reads individual line between grids
                 }
 
             }
-            Console.WriteLine($"game num {gameNum}");
-            Console.WriteLine($"even player {oddPlayer}");
-            Console.WriteLine($"even player {evenPlayer}");
-            DisplayGrid(playerGrid);
-            DisplayGrid(hitsAndMissesGrid);
-            DisplayGrid(computerGrid);
+            Console.WriteLine("game loaded!");
+            // if the file is not in the very specifc format the reader will freak out (make steps to not be editable by the user?) 
+            //Game(gameNum, oddPlayer, evenPlayer, playerSunkBoats, computerSunkBoats, playerGrid, hitsAndMissesGrid, computerGrid);
+
         }
 
         static void WriteGame(int gameNum,string oddPlayer,string evenPlayer, char[,] playerGrid , char[,] hitsAndMissesGrid , char[,] computerGrid,int playerSunkBoats,int computerSunkBoats)
@@ -142,22 +139,29 @@ namespace BattleBoats
 
             }
         }
-        static void Game()
+
+        static void NewGame()
         {
             int gameNum = 0;
             string oddPlayer = "player";
             string evenPlayer = "computer";
-            int payerSunkBoats = 0;
+            int playerSunkBoats = 0;
             int computerSunkBoats = 0;
             char[,] playerGrid = new char[8, 8];
             char[,] hitsAndMissesGrid = new char[8, 8];
             char[,] computerGrid = new char[8, 8];
-
-            string winningPerson = "not yet";//
             playerGrid = IntialisePlayerGrid(playerGrid);
             computerGrid = IntialiseComputerGrid(computerGrid);
             hitsAndMissesGrid = SetBlankGrid(hitsAndMissesGrid);
-            // set the grids
+            // sets the grids
+
+            Game( gameNum,oddPlayer, evenPlayer, playerSunkBoats, computerSunkBoats, playerGrid,  hitsAndMissesGrid,computerGrid);
+
+        }
+        static void Game(int gameNum, string oddPlayer , string evenPlayer, int playerSunkBoats , int computerSunkBoats, char[,] playerGrid , char[,] hitsAndMissesGrid, char[,] computerGrid)
+        {
+
+            string winningPerson = "not yet";//
 
             while (winningPerson != "player" && winningPerson != "computer")
             {
@@ -171,7 +175,7 @@ namespace BattleBoats
                 {
                     if (evenPlayer == "player")
                     {
-                        playerWon = PlayerTurn(ref computerGrid,ref hitsAndMissesGrid, ref payerSunkBoats);
+                        playerWon = PlayerTurn(ref computerGrid,ref hitsAndMissesGrid, ref playerSunkBoats);
                     }
                     else
                     {
@@ -183,7 +187,7 @@ namespace BattleBoats
                 {
                     if (oddPlayer == "player")
                     {
-                        playerWon = PlayerTurn(ref computerGrid, ref hitsAndMissesGrid, ref payerSunkBoats);
+                        playerWon = PlayerTurn(ref computerGrid, ref hitsAndMissesGrid, ref playerSunkBoats);
                     }
                     else
                     {
@@ -202,7 +206,7 @@ namespace BattleBoats
                 {
                     winningPerson = "computer";
                 }
-                if (payerSunkBoats >= 5)
+                if (playerSunkBoats >= 5)
                 {
                     winningPerson = "player";
                 }
