@@ -284,6 +284,7 @@ namespace BattleBoats
             string computerWon = "no";
             Random rand = new Random();
             Console.WriteLine("Computer turn! :");
+            Thread.Sleep(3000);
             do
             {
                 attackNums[1] = rand.Next(computerGrid.GetLength(0));
@@ -294,9 +295,11 @@ namespace BattleBoats
             if (playerGrid[attackNums[1], attackNums[0]] == 'B')
             {
                 playerGrid[attackNums[1], attackNums[0]] = 'D';
+                Thread.Sleep(3000);
                 Console.WriteLine("the computer hit one of your boats! (and as it was only one square it sank immediatley)");
                 DisplayGrid(playerGrid);
                 Console.WriteLine("The computer gets and extra go!");
+                Thread.Sleep(3000);
                 sunkBoats++;
                 computerWon = "yes";
 
@@ -306,16 +309,27 @@ namespace BattleBoats
             {
                 playerGrid[attackNums[1], attackNums[0]] = 'M';
                 Console.WriteLine("the computer sent a missile but it missed!");
+                Thread.Sleep(3000);
                 DisplayGrid(playerGrid);
+                Thread.Sleep(3000);
             }
 
             return computerWon;
         }
 
+        static void DisplayAllGrids()
+        {
+
+        }
+
         static void DisplayGrid(char[,] grid)
         {
+            Console.Clear();
             char startingLetter = 'A';
             // sets the letter to start at
+            
+            
+
             Console.Write("   ");
             for(int f  = 0; f < grid.GetLength(1); f++)
             {
