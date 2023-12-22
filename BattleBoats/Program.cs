@@ -10,13 +10,14 @@ namespace BattleBoats
         {
 
 
-            string mode = "Wants to continue";
-            while (mode == "Wants to continue")
-            {
-                mode = DisplayMenu();
-            }
+            //string mode = "Wants to continue";
+            //while (mode == "Wants to continue")
+            //{
+            //    mode = DisplayMenu();
+            //}
 
-
+            WriteSideways("hello testing", Console.CursorTop, Console.CursorLeft, 0);
+            WriteSideways("hello testing further along", Console.CursorTop, Console.CursorLeft, 10);
 
             //playerGrid = IntialiseComputerGrid(playerGrid);// set random boats for testing
             //computerGrid = IntialiseComputerGrid(computerGrid);
@@ -360,6 +361,11 @@ namespace BattleBoats
             }
         }
 
+        static void WriteSideways(string text,int currentTop, int currentLeft,int sidelength )
+        {
+            Console.SetCursorPosition(currentLeft + sidelength, currentTop );
+            Console.Write(text);
+        }
         static char[,] IntialisePlayerGrid(char[,] playerGrid)
       
         {
