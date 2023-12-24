@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using System.Text;
 
 namespace BattleBoats
 {
@@ -16,18 +17,24 @@ namespace BattleBoats
             //    mode = DisplayMenu();
             //}
 
-            WriteSideways("hello testing", Console.CursorTop, Console.CursorLeft, 0);
-            WriteSideways("hello testing further along", Console.CursorTop, Console.CursorLeft, 10);
-
-            //playerGrid = IntialiseComputerGrid(playerGrid);// set random boats for testing
-            //computerGrid = IntialiseComputerGrid(computerGrid);
-            //hitsAndMissesGrid = SetBlankGrid(hitsAndMissesGrid);
-
-            //WriteGame(gameNum, oddPlayer, evenPlayer, playerGrid, hitsAndMissesGrid, computerGrid, payerSunkBoats, computerSunkBoats);
-            //LoadGame();
+            //WriteSideways("hello testing", Console.CursorTop, Console.CursorLeft, 0);
+            //WriteSideways("hello testing further along", Console.CursorTop, Console.CursorLeft, 10);
 
 
-            //Console.WriteLine(ownGrid[arrayCoodinateas[0],arrayCoodinateas[1]]);
+            char[,] playerGrid = new char[8, 8];
+            char[,] computerGrid = new char[8, 8];
+            char[,] hitsAndMissesGrid = new char[8, 8];
+
+            playerGrid = IntialiseComputerGrid(playerGrid);// set random boats for testing
+            computerGrid = IntialiseComputerGrid(computerGrid);
+            hitsAndMissesGrid = SetBlankGrid(hitsAndMissesGrid);
+
+            DisplayGrids(playerGrid,hitsAndMissesGrid,computerGrid);
+
+            for(int f=0; f<100; f++)
+            {
+                Console.WriteLine("|");
+            }
         }
 
         static string DisplayMenu()
@@ -321,51 +328,65 @@ namespace BattleBoats
 
             return computerWon;
         }
-
-        static void DisplayAllGrids(char[,] playerGrid , char[,] hitsAndMissesGrid, char[,] computerGrid)
-            // computer grid here just for testing
+        // this method should be replaced by the new DisplayGrids method
+        static void DisplayAllGrids(char[,] playerGrid, char[,] hitsAndMissesGrid, char[,] computerGrid)
+        // computer grid here just for testing
         {
-            Console.Clear();
-            Console.WriteLine("Your grid is:");
-            DisplayGrid(playerGrid);
-            Console.WriteLine("Your hits and misses are:");
-            DisplayGrid(hitsAndMissesGrid);
-            Console.WriteLine("The computer's grid is:");
-            DisplayGrid(computerGrid);
+            //Console.Clear();
+            //Console.WriteLine("Your grid is:");
+            //DisplayGrid(playerGrid);
+            //Console.WriteLine("Your hits and misses are:");
+            //DisplayGrid(hitsAndMissesGrid);
+            //Console.WriteLine("The computer's grid is:");
+            //DisplayGrid(computerGrid);
         }
 
-        static void DisplayGrid(char[,] grid)
+        static void DisplayGrids(char[,] playerGrid, char[,] hitsAndMissesGrid, char[,] computerGrid)
+            // computer grid just for testing
+            // I was thinking that to go down you mins top but it was plus (you can go infinitley down!)
         {
             char startingLetter = 'A';
+            int gridSpacing = 5;
             // sets the letter to start at
-            
-            
-
-            Console.Write("   ");
-            for(int f  = 0; f < grid.GetLength(1); f++)
+            char[][,] grids = { playerGrid, hitsAndMissesGrid, computerGrid };
+            //move the cursor only anytime you would change a line 
+            int top = Console.CursorTop;
+            int left = 0;
+            Console.WriteLine(top);
+            for (int d = 0; d < grids.Length; d++)
+                //cycle through all of the grids
             {
-                Console.Write($"{f} ");
-                // print a num for each collum you have
-            }
-            Console.Write("\n");
-            for (int i  = 0; i < grid.GetLength(0); i++)
-            {
-                Console.Write($"{Convert.ToChar(startingLetter+i)}. ");
-                // at the start of each line add the line index to the starting letter to get the current letter
-                for (int j = 0; j < grid.GetLength(1); j++)
+                int currnentTop = top;
+                Console.SetCursorPosition(left, currnentTop);// move the cursor
+                Console.Write("   ");
+                for (int f = 0; f < grids[d].GetLength(1); f++)
                 {
-                    Console.Write($"{grid[i, j]} ");
-                    // write each row on the same line
+                    Console.Write($"{f} ");
+                    // print a num for each collum you have
                 }
-                Console.Write("\n");
+                // New line!
+                currnentTop += 1;
+                Console.SetCursorPosition(left, currnentTop);
+                for (int i = 0; i < grids[d].GetLength(0); i++)
+                {
+                    Console.Write($"{Convert.ToChar(startingLetter + i)}. ");
+                    // at the start of each line add the line index to the starting letter to get the current letter
+                    for (int j = 0; j < grids[d].GetLength(1); j++)
+                    {
+                        Console.Write($"{grids[d][i, j]} ");
+                        // write each row on the same line
+                    }
+                    currnentTop += 1;
+                    Console.SetCursorPosition(left, currnentTop);//move down a row
+
+                }
+                left+= (grids[d].GetLength(0)*2)+3+gridSpacing;// *2 and +3 account for spaces and axes lables
+
             }
         }
 
-        static void WriteSideways(string text,int currentTop, int currentLeft,int sidelength )
-        {
-            Console.SetCursorPosition(currentLeft + sidelength, currentTop );
-            Console.Write(text);
-        }
+
+        // replace the times when you just display the player grid with displaying all grids
         static char[,] IntialisePlayerGrid(char[,] playerGrid)
       
         {
@@ -373,7 +394,7 @@ namespace BattleBoats
             // if I add different types of boats I am going to have to significantly change this
             int numberOfBoats = 5;
 
-            DisplayGrid(playerGrid);
+            //DisplayGrid(playerGrid);
 
             for(int i = 1; i <= numberOfBoats; i++)
             {
@@ -387,7 +408,7 @@ namespace BattleBoats
                 }
                 playerGrid[inputCoordinates[1],inputCoordinates[0]] = 'B';
                 Console.Clear();
-                DisplayGrid(playerGrid);
+                //DisplayGrid(playerGrid);
                 Console.WriteLine("Boat placed!");
             }
             
