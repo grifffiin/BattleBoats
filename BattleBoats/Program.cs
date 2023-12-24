@@ -11,30 +11,12 @@ namespace BattleBoats
         {
 
 
-            //string mode = "Wants to continue";
-            //while (mode == "Wants to continue")
-            //{
-            //    mode = DisplayMenu();
-            //}
-
-            //WriteSideways("hello testing", Console.CursorTop, Console.CursorLeft, 0);
-            //WriteSideways("hello testing further along", Console.CursorTop, Console.CursorLeft, 10);
-
-
-            char[,] playerGrid = new char[8, 8];
-            char[,] computerGrid = new char[8, 8];
-            char[,] hitsAndMissesGrid = new char[8, 8];
-
-            playerGrid = IntialiseComputerGrid(playerGrid);// set random boats for testing
-            computerGrid = IntialiseComputerGrid(computerGrid);
-            hitsAndMissesGrid = SetBlankGrid(hitsAndMissesGrid);
-
-            DisplayGrids(playerGrid,hitsAndMissesGrid,computerGrid);
-
-            for(int f=0; f<100; f++)
+            string mode = "Wants to continue";
+            while (mode == "Wants to continue")
             {
-                Console.WriteLine("|");
+                mode = DisplayMenu();
             }
+
         }
 
         static string DisplayMenu()
@@ -162,9 +144,9 @@ namespace BattleBoats
             char[,] playerGrid = new char[8, 8];
             char[,] hitsAndMissesGrid = new char[8, 8];
             char[,] computerGrid = new char[8, 8];
-            playerGrid = IntialisePlayerGrid(playerGrid);
             computerGrid = IntialiseComputerGrid(computerGrid);
             hitsAndMissesGrid = SetBlankGrid(hitsAndMissesGrid);
+            playerGrid = IntialisePlayerGrid(playerGrid, hitsAndMissesGrid, computerGrid);
             // sets the grids
 
             Game( gameNum,oddPlayer, evenPlayer, playerSunkBoats, computerSunkBoats, playerGrid,  hitsAndMissesGrid,computerGrid);
@@ -176,7 +158,7 @@ namespace BattleBoats
             string gameState = "not yet";//
             string gameSaved = "not yet";
 
-            while (gameState != "playerWonRound" && gameState != "computerWonRound" && gameState != "saved")
+            while (gameState != "you" && gameState != "the computer" && gameState != "saved")
             {
 
                 string playerWon = "";
@@ -192,7 +174,6 @@ namespace BattleBoats
                     }
                     else
                     {
-                        Console.WriteLine("Computer turn ");
                         computerWon = ComputerTurn(ref computerGrid, ref playerGrid, ref computerSunkBoats, ref hitsAndMissesGrid);
                     }
                 }
@@ -204,9 +185,8 @@ namespace BattleBoats
                     }
                     else
                     {
-                        Console.WriteLine("Computer turn ");
                         computerWon = ComputerTurn(ref computerGrid, ref playerGrid, ref computerSunkBoats, ref hitsAndMissesGrid);
-                        // is there a reason I am passing by reference
+                        // is there a reason I am passing by reference this is kind of a messs
                     }
                 }
 
@@ -225,17 +205,16 @@ namespace BattleBoats
                 //swap them using tuples
                 if (computerSunkBoats >= 5)
                 {
-                    gameState = "computerWonRound";
+                    gameState = "the computer";
                 }
                 if (playerSunkBoats >= 5)
                 {
-                    gameState = "playerWonRound";
+                    gameState = "you";
                 }
 
             }
 
             Console.WriteLine($"the winner was {gameState}! who won in {gameNum} turns");
-            /// test this asap
         }
 
         static string PlayerTurn(ref char[,] computerGrid, ref char[,] hitsAndMissesGrid, ref int sunkBoats, ref char[,] playerGrid)
@@ -244,14 +223,14 @@ namespace BattleBoats
             int[] attackNums = {-1,-1};
             string playerwon = "no";
 
-            DisplayAllGrids(playerGrid, hitsAndMissesGrid, computerGrid);
-            Console.WriteLine("Player turn!\n  ");
+            DisplayGrids(playerGrid, hitsAndMissesGrid, computerGrid);
+            Console.WriteLine("Your turn!\n");
 
             while (attackNums[0] == -1 ) 
                 // -1 means an invalid coordinate
             {
 
-                Console.WriteLine("Enter the coordinates of where you want to send your missile (in the form numberLetter) or type save to save to a file");
+                Console.WriteLine("Enter the coordinates of where you want to send your missile (in the form numberLetter) or type save to save to a file:");
                 string input = Console.ReadLine();
 
                 if(input == "save")
@@ -274,6 +253,7 @@ namespace BattleBoats
                 hitsAndMissesGrid[attackNums[1], attackNums[0]] = 'H';
                 Console.WriteLine("You hit a computer's boat! (and as it was only one square it sank immediatley)");
                 Console.WriteLine("You get an extra go !");
+                Thread.Sleep(3000);
                 sunkBoats++;
                 playerwon = "yes";
 
@@ -295,7 +275,13 @@ namespace BattleBoats
             int[] attackNums = new int[2];
             string computerWon = "no";
             Random rand = new Random();
-            Thread.Sleep(3000);
+            DisplayGrids(playerGrid, hitsAndMissesGrid, computerGrid);
+            Console.WriteLine("Computer thinking");
+            for (int i = 0; i > 3; i++)
+            {
+                Thread.Sleep(1000);
+                Console.Write(".");
+            }
             do
             {
                 attackNums[1] = rand.Next(computerGrid.GetLength(0));
@@ -306,8 +292,7 @@ namespace BattleBoats
             if (playerGrid[attackNums[1], attackNums[0]] == 'B')
             {
                 playerGrid[attackNums[1], attackNums[0]] = 'D';
-                Thread.Sleep(3000);
-                DisplayAllGrids(playerGrid, hitsAndMissesGrid, computerGrid);
+                DisplayGrids(playerGrid, hitsAndMissesGrid, computerGrid);
                 Console.WriteLine("the computer hit one of your boats! (and as it was only one square it sank immediatley)");
                 Console.WriteLine("The computer gets and extra go!");
                 Thread.Sleep(3000);
@@ -319,7 +304,7 @@ namespace BattleBoats
             else
             {
                 playerGrid[attackNums[1], attackNums[0]] = 'M';
-                DisplayAllGrids(playerGrid, playerGrid,computerGrid);
+                DisplayGrids(playerGrid, playerGrid,computerGrid);
                 Console.WriteLine("the computer sent a missile but it missed!");
                 Thread.Sleep(3000);
                 
@@ -329,27 +314,19 @@ namespace BattleBoats
             return computerWon;
         }
         // this method should be replaced by the new DisplayGrids method
-        static void DisplayAllGrids(char[,] playerGrid, char[,] hitsAndMissesGrid, char[,] computerGrid)
-        // computer grid here just for testing
-        {
-            //Console.Clear();
-            //Console.WriteLine("Your grid is:");
-            //DisplayGrid(playerGrid);
-            //Console.WriteLine("Your hits and misses are:");
-            //DisplayGrid(hitsAndMissesGrid);
-            //Console.WriteLine("The computer's grid is:");
-            //DisplayGrid(computerGrid);
-        }
+
 
         static void DisplayGrids(char[,] playerGrid, char[,] hitsAndMissesGrid, char[,] computerGrid)
             // computer grid just for testing
             // I was thinking that to go down you mins top but it was plus (you can go infinitley down!)
         {
+            Console.Clear();
             char startingLetter = 'A';
-            int gridSpacing = 5;
             // sets the letter to start at
+            int gridSpacing = 5;
             char[][,] grids = { playerGrid, hitsAndMissesGrid, computerGrid };
-            //move the cursor only anytime you would change a line 
+            string[] girdnames = { "Your grid", "Your hits and misses", "The computer's grid" };
+            //the order wich you pass the grids matters!
             int top = Console.CursorTop;
             int left = 0;
             Console.WriteLine(top);
@@ -358,6 +335,9 @@ namespace BattleBoats
             {
                 int currnentTop = top;
                 Console.SetCursorPosition(left, currnentTop);// move the cursor
+                Console.WriteLine($"{girdnames[d]}:");
+                currnentTop += 1;
+                Console.SetCursorPosition(left, currnentTop);// new line
                 Console.Write("   ");
                 for (int f = 0; f < grids[d].GetLength(1); f++)
                 {
@@ -383,11 +363,12 @@ namespace BattleBoats
                 left+= (grids[d].GetLength(0)*2)+3+gridSpacing;// *2 and +3 account for spaces and axes lables
 
             }
+            Console.SetCursorPosition(0, Console.CursorTop);
+            // set the cursor back to the start
         }
 
-
         // replace the times when you just display the player grid with displaying all grids
-        static char[,] IntialisePlayerGrid(char[,] playerGrid)
+        static char[,] IntialisePlayerGrid(char[,] playerGrid,char[,] hitsAndMissesGrid, char[,] computerGrid)
       
         {
             SetBlankGrid(playerGrid);
@@ -400,16 +381,25 @@ namespace BattleBoats
             {
                 int[] boatCoordinates = new int[2];
                 int[] inputCoordinates = { -1, -1 };
-                while (inputCoordinates[0] == -1 || playerGrid[inputCoordinates[1],inputCoordinates[0]] == 'B') 
-                // -1 if invalid input coordinates and if they attempt to place one on top of a boat
+                while (inputCoordinates[0] == -1 ) 
+                // -1 if invalid input coordinates 
                 {
-                    Console.WriteLine($"enter your coordinates in the form: NumberLetter for the placment of boat number {i} (only place boats in empty spaces):");
+                    DisplayGrids(playerGrid, hitsAndMissesGrid, computerGrid);
+                    Console.WriteLine($"enter your coordinates for the placment of boat number {i} e.g 5A (only place boats in empty spaces):");
                     inputCoordinates = GetCoodrinates(Console.ReadLine());
+
+                    if(inputCoordinates[0] != -1 && playerGrid[inputCoordinates[1], inputCoordinates[0]] == 'B')
+                    {
+                        inputCoordinates[0] = -1;
+                        inputCoordinates[1] = -1;
+                        Console.WriteLine("You already have a boat there!");
+                        Thread.Sleep(1000);
+                        // if boat already exists on square set to -1
+                    }
                 }
                 playerGrid[inputCoordinates[1],inputCoordinates[0]] = 'B';
-                Console.Clear();
-                //DisplayGrid(playerGrid);
-                Console.WriteLine("Boat placed!");
+                //DisplayGrids(playerGrid,hitsAndMissesGrid,computerGrid);
+                Console.WriteLine("\nBoat placed!");
             }
             
 
