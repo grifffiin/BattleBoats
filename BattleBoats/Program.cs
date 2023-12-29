@@ -22,6 +22,8 @@ namespace BattleBoats
         static string DisplayMenu()
         {
             Console.WriteLine(
+                "Welcome to:" +
+                "\r\n______       _   _   _       ______             _       \r\n| ___ \\     | | | | | |      | ___ \\           | |      \r\n| |_/ / __ _| |_| |_| | ___  | |_/ / ___   __ _| |_ ___ \r\n| ___ \\/ _` | __| __| |/ _ \\ | ___ \\/ _ \\ / _` | __/ __|\r\n| |_/ / (_| | |_| |_| |  __/ | |_/ / (_) | (_| | |_\\__ \\\r\n\\____/ \\__,_|\\__|\\__|_|\\___| \\____/ \\___/ \\__,_|\\__|___/\r\n                                                        \r\n                                                        \r\n" +
                 "Type the number for the option you want: \n" +
                 "1. Show the instructions\n" +
                 "2. Start a new game\n" +
@@ -60,7 +62,7 @@ namespace BattleBoats
         }
 
         static void LoadGame()
-            // mabey break this subroutine up?
+          
         {
             int gameNum = 0;
             string oddPlayer = "";
@@ -128,7 +130,7 @@ namespace BattleBoats
                 }
 
             }
-            Console.WriteLine($"Game wirtten to file! in {filePath}");
+            Console.WriteLine($"Game wirtten to file! as {filePath}");
 
         }
 
@@ -213,8 +215,10 @@ namespace BattleBoats
                 }
 
             }
-
-            Console.WriteLine($"the winner was {gameState}! who won in {gameNum} turns");
+            if (gameState != "saved")
+            {
+                Console.WriteLine($"the winner was {gameState}! who won in {gameNum} turns");
+            }
         }
 
         static string PlayerTurn(ref char[,] computerGrid, ref char[,] hitsAndMissesGrid, ref int sunkBoats, ref char[,] playerGrid)
@@ -223,12 +227,11 @@ namespace BattleBoats
             int[] attackNums = {-1,-1};
             string playerwon = "no";
 
-            DisplayGrids(playerGrid, hitsAndMissesGrid, computerGrid);
-            Console.WriteLine("Your turn!\n");
-
             while (attackNums[0] == -1 ) 
                 // -1 means an invalid coordinate
             {
+                DisplayGrids(playerGrid, hitsAndMissesGrid, computerGrid);
+                Console.WriteLine("Your turn!\n");
 
                 Console.WriteLine("Enter the coordinates of where you want to send your missile (in the form numberLetter) or type save to save to a file:");
                 string input = Console.ReadLine();
@@ -263,6 +266,7 @@ namespace BattleBoats
             {
                 hitsAndMissesGrid[attackNums[1], attackNums[0]] = 'M';
                 Console.WriteLine("You missed!");
+                Thread.Sleep(3000);
             }
 
             return playerwon;
@@ -276,12 +280,13 @@ namespace BattleBoats
             string computerWon = "no";
             Random rand = new Random();
             DisplayGrids(playerGrid, hitsAndMissesGrid, computerGrid);
-            Console.WriteLine("Computer thinking");
-            for (int i = 0; i > 3; i++)
+            Console.Write("Computer thinking");
+            for (int i = 0; i <= 3; i++)
             {
                 Thread.Sleep(1000);
                 Console.Write(".");
             }
+            Console.Write("\n");
             do
             {
                 attackNums[1] = rand.Next(computerGrid.GetLength(0));
@@ -295,7 +300,6 @@ namespace BattleBoats
                 DisplayGrids(playerGrid, hitsAndMissesGrid, computerGrid);
                 Console.WriteLine("the computer hit one of your boats! (and as it was only one square it sank immediatley)");
                 Console.WriteLine("The computer gets and extra go!");
-                Thread.Sleep(3000);
                 sunkBoats++;
                 computerWon = "yes";
 
@@ -304,16 +308,13 @@ namespace BattleBoats
             else
             {
                 playerGrid[attackNums[1], attackNums[0]] = 'M';
-                DisplayGrids(playerGrid, playerGrid,computerGrid);
+                DisplayGrids(playerGrid, hitsAndMissesGrid,computerGrid);
                 Console.WriteLine("the computer sent a missile but it missed!");
-                Thread.Sleep(3000);
-                
-                
+ 
             }
-
+            Thread.Sleep(3000);
             return computerWon;
         }
-        // this method should be replaced by the new DisplayGrids method
 
 
         static void DisplayGrids(char[,] playerGrid, char[,] hitsAndMissesGrid, char[,] computerGrid)
@@ -353,8 +354,30 @@ namespace BattleBoats
                     // at the start of each line add the line index to the starting letter to get the current letter
                     for (int j = 0; j < grids[d].GetLength(1); j++)
                     {
+                        switch(grids[d][i, j])
+                        {
+                            case '*':
+                                Console.ForegroundColor = ConsoleColor.Blue;
+                                break;
+                            case 'B':
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                break;
+                            case 'D':
+                                Console.ForegroundColor = ConsoleColor.DarkRed;
+                                break;
+                            case 'M':
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                break;
+                            case 'H':
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                break;
+                            default:
+                                Console.ForegroundColor = ConsoleColor.White;
+                                break;
+                        }
                         Console.Write($"{grids[d][i, j]} ");
                         // write each row on the same line
+                        Console.ForegroundColor = ConsoleColor.White;
                     }
                     currnentTop += 1;
                     Console.SetCursorPosition(left, currnentTop);//move down a row
@@ -455,7 +478,7 @@ namespace BattleBoats
             int[] arrayCooridnates = new int[2];
             int gridSize = 8;
             coordinates = coordinates.ToUpper();
-            if (coordinates == "" || coordinates.Length > 2 || coordinates[0]<'0'||coordinates[0]-'0' >= gridSize || coordinates[1] >= ('A' + gridSize )|| coordinates[1] < ('A'))
+            if (coordinates == "" || coordinates.Length != 2 || coordinates[0]<'0'||coordinates[0]-'0' >= gridSize || coordinates[1] >= ('A' + gridSize )|| coordinates[1] < ('A'))
                 // 
             {
                 arrayCooridnates[0] = -1;
