@@ -15,19 +15,24 @@ namespace BattleBoats
             while (mode == "Wants to continue")
             {
                 mode = DisplayMenu();
+                // displays the menu until the user wants to quit
             }
 
         }
-
+        /// <summary>
+        /// displays the menu for the user running the appropriate subroutine for their choice
+        /// </summary>
+        /// <returns> returns a string whether the user wants to continue</returns>
         static string DisplayMenu()
         {
+            Console.Clear();
             Console.WriteLine(
                 "Welcome to:" +
                 "\r\n______       _   _   _       ______             _       \r\n| ___ \\     | | | | | |      | ___ \\           | |      \r\n| |_/ / __ _| |_| |_| | ___  | |_/ / ___   __ _| |_ ___ \r\n| ___ \\/ _` | __| __| |/ _ \\ | ___ \\/ _ \\ / _` | __/ __|\r\n| |_/ / (_| | |_| |_| |  __/ | |_/ / (_) | (_| | |_\\__ \\\r\n\\____/ \\__,_|\\__|\\__|_|\\___| \\____/ \\___/ \\__,_|\\__|___/\r\n                                                        \r\n                                                        \r\n" +
                 "Type the number for the option you want: \n" +
                 "1. Show the instructions\n" +
                 "2. Start a new game\n" +
-                "3. Load game from a file\n" +
+                "3. Load game from save\n" +
                 "4. Quit");
            string mode = Console.ReadLine();
             if (mode == "1")
@@ -423,6 +428,8 @@ namespace BattleBoats
                 playerGrid[inputCoordinates[1],inputCoordinates[0]] = 'B';
                 //DisplayGrids(playerGrid,hitsAndMissesGrid,computerGrid);
                 Console.WriteLine("\nBoat placed!");
+                Thread.Sleep(1000);
+
             }
             
 
