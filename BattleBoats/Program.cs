@@ -161,7 +161,7 @@ namespace BattleBoats
             char[,] computerGrid = new char[8, 8];
             computerGrid = IntialiseComputerGrid(computerGrid);
             hitsAndMissesGrid = SetBlankGrid(hitsAndMissesGrid);
-            playerGrid = IntialisePlayerGrid(playerGrid, hitsAndMissesGrid, computerGrid);
+            playerGrid = IntialisePlayerGrid(playerGrid, hitsAndMissesGrid);
            
 
             Game( gameNum,oddPlayer, evenPlayer, playerSunkBoats, computerSunkBoats, playerGrid,  hitsAndMissesGrid,computerGrid);
@@ -254,7 +254,7 @@ namespace BattleBoats
             while (attackNums[0] == -1 ) 
                 // -1 means an invalid coordinate
             {
-                RefreshGrids(playerGrid, hitsAndMissesGrid, computerGrid);
+                RefreshGrids(playerGrid, hitsAndMissesGrid);
                 Console.WriteLine("Your turn!\n");
 
                 Console.WriteLine("Enter the coordinates of where you want to send your missile (in the form numberLetter) or type save to save to a file:");
@@ -307,7 +307,7 @@ namespace BattleBoats
             int[] attackNums = new int[2];
             string computerWon = "no";
             Random rand = new Random();
-            RefreshGrids(playerGrid, hitsAndMissesGrid, computerGrid);
+            RefreshGrids(playerGrid, hitsAndMissesGrid);
             Console.Write("Computer thinking");
             for (int i = 0; i <= 3; i++)
             {
@@ -325,7 +325,7 @@ namespace BattleBoats
             if (playerGrid[attackNums[1], attackNums[0]] == 'B')
             {
                 playerGrid[attackNums[1], attackNums[0]] = 'D';
-                RefreshGrids(playerGrid, hitsAndMissesGrid, computerGrid);
+                RefreshGrids(playerGrid, hitsAndMissesGrid);
                 Console.WriteLine("the computer hit one of your boats! (and as it was only one square it sank immediatley)");
                 Console.WriteLine("The computer gets and extra go!");
                 sunkBoats++;
@@ -336,7 +336,7 @@ namespace BattleBoats
             else
             {
                 playerGrid[attackNums[1], attackNums[0]] = 'M';
-                RefreshGrids(playerGrid, hitsAndMissesGrid,computerGrid);
+                RefreshGrids(playerGrid, hitsAndMissesGrid);
                 Console.WriteLine("the computer sent a missile but it missed!");
  
             }
@@ -351,16 +351,15 @@ namespace BattleBoats
         /// generate the axes and add spacing
         /// check the different characters changing their colors appropriatley
         /// </summary>
-        static void RefreshGrids(char[,] playerGrid, char[,] hitsAndMissesGrid, char[,] computerGrid)
+        static void RefreshGrids(char[,] playerGrid, char[,] hitsAndMissesGrid)
             // computer grid just for testing
-            // I was thinking that to go down you mins top but it was plus (you can go infinitley down!)
         {
             Console.Clear();
             char startingLetter = 'A';
             // sets the letter to start at
             int gridSpacing = 5;
-            char[][,] grids = { playerGrid, hitsAndMissesGrid, computerGrid };
-            string[] girdnames = { "Your grid", "Your hits and misses", "The computer's grid" };
+            char[][,] grids = { playerGrid, hitsAndMissesGrid };
+            string[] girdnames = { "Your grid", "Your hits and misses" };
             //the order wich you pass the grids matters!
             int top = Console.CursorTop;
             int left = 0;
@@ -429,7 +428,7 @@ namespace BattleBoats
         /// check if a boat already exists there
         /// </summary>
         /// <returns>return the populated grid</returns>
-        static char[,] IntialisePlayerGrid(char[,] playerGrid,char[,] hitsAndMissesGrid, char[,] computerGrid)
+        static char[,] IntialisePlayerGrid(char[,] playerGrid,char[,] hitsAndMissesGrid)
       
         {
             SetBlankGrid(playerGrid);
@@ -442,7 +441,7 @@ namespace BattleBoats
                 while (inputCoordinates[0] == -1 ) 
                 // -1 if invalid input coordinates 
                 {
-                    RefreshGrids(playerGrid, hitsAndMissesGrid, computerGrid);
+                    RefreshGrids(playerGrid, hitsAndMissesGrid);
                     Console.WriteLine($"enter your coordinates for the placment of boat number {i} e.g 5A (only place boats in empty spaces):");
                     inputCoordinates = GetCoodrinates(Console.ReadLine());
 
