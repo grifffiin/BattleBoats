@@ -22,7 +22,7 @@ namespace BattleBoats
         /// <summary>
         /// displays the menu for the user running the appropriate subroutine for their choice
         /// </summary>
-        /// <returns> returns a string whether the user wants to continue</returns>
+        /// <returns> returns a string indicating if quit has been selected/returns>
         static string DisplayMenu()
         {
             Console.Clear();
@@ -34,6 +34,7 @@ namespace BattleBoats
                 "2. Start a new game\n" +
                 "3. Load game from save\n" +
                 "4. Quit");
+            // displays options and ascii art
            string mode = Console.ReadLine();
             if (mode == "1")
             {
