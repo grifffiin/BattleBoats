@@ -9,14 +9,19 @@ namespace BattleBoats
     {
         static void Main(string[] args)
         {
+            char[,] playerGrid = new char[8, 8];
+            char[,] computerGrid = new char[8, 8];
+            char[,] hitsAndMissesGrid = new char[8, 8];
+            SetBlankGrid(hitsAndMissesGrid);
+            SetBlankGrid(computerGrid);
+            IntialisePlayerGrid(playerGrid,hitsAndMissesGrid,computerGrid);
 
-
-            string mode = "Wants to continue";
-            while (mode == "Wants to continue")
-            {
-                mode = DisplayMenu();
-                // displays the menu until the user wants to quit
-            }
+            //string mode = "Wants to continue";
+            //while (mode == "Wants to continue")
+            //{
+            //    mode = DisplayMenu();
+            //    // displays the menu until the user wants to quit
+            //}
 
         }
         /// <summary>
@@ -433,37 +438,42 @@ namespace BattleBoats
       
         {
             SetBlankGrid(playerGrid);
-            int numberOfBoats = 5;
+            string[] boats = { "destroyer", "destroyer", "submarine", "submarine", "carrier" };
+            char[] boatType = { 'B', 'B', '&', '&', '@' };
+            int[] boatLength = { 1, 1, 3, 3, 5 };// unessary?
 
-            for(int i = 1; i <= numberOfBoats; i++)
+
+            for (int i = 0; i < boatType.Length; i++)
             {
-                int[] boatCoordinates = new int[2];
-                int[] inputCoordinates = { -1, -1 };
-                while (inputCoordinates[0] == -1 ) 
-                // -1 if invalid input coordinates 
+                int[] centre = {playerGrid.GetLength(0)/2, playerGrid.GetLength(1) / 2 };
+                char[,] updatedGrid = new char[playerGrid.GetLength(0),playerGrid.GetLength(1)];
+                Array.Copy(playerGrid, updatedGrid, playerGrid.Length);
+                // creates a copy of the array (not just a reference)
+                for (int f = 0; f<= (boatLength[i] / 2); f++)
                 {
-                    RefreshGrids(playerGrid, hitsAndMissesGrid, computerGrid);
-                    Console.WriteLine($"enter your coordinates for the placment of boat number {i} e.g 5A (only place boats in empty spaces):");
-                    inputCoordinates = GetCoodrinates(Console.ReadLine());
-
-                    if(inputCoordinates[0] != -1 && playerGrid[inputCoordinates[1], inputCoordinates[0]] == 'B')
-                    {
-                        inputCoordinates[0] = -1;
-                        inputCoordinates[1] = -1;
-                        Console.WriteLine("You already have a boat there!");
-                        Thread.Sleep(1000);
-                        // if boat already exists on square set to -1
-                    }
+                    updatedGrid[centre[0]+f,centre[1]] = boatType[i];
+                    updatedGrid[centre[0]-f, centre[1]] = boatType[i];
                 }
-                playerGrid[inputCoordinates[1],inputCoordinates[0]] = 'B';
-                Console.WriteLine("\nBoat placed!");
-                Thread.Sleep(1000);
+                for (int f = 0; f < 5; f++)
+                {
+                    RefreshGrids(updatedGrid, hitsAndMissesGrid, computerGrid);
+                    Thread.Sleep(1000);
+                    RefreshGrids(playerGrid, hitsAndMissesGrid, computerGrid);
+                    Thread.Sleep(500);
+
+                }
+
+             // place boat in centre (blinking?)
+             // prompt the user to move with arrow keys until statisfied (press enter?)
+             // press arrows to rotate name orietations diagonal L dagonal R and vertical and horizontal (if time look up matracies)
 
             }
             
 
             return playerGrid;
         }
+
+
 
         /// <summary>
         /// generate random coordinates until you get 5 valid ones
