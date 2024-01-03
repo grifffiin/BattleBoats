@@ -462,6 +462,7 @@ namespace BattleBoats
                     Thread.Sleep(500);
 
                 }
+                
 
              // place boat in centre (blinking?)
              // prompt the user to move with arrow keys until statisfied (press enter?)
