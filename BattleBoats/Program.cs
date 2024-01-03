@@ -65,6 +65,7 @@ namespace BattleBoats
                 " On your grid your boats are marked as \'B\', boats that have been hit are marked as \'D\'and places where the computer has fired missiles but missed are marked as \'M\'\n" +
                 "On your \'hits and misses\' grid boats you have sucsesfully hit are marked as \'H\' and previous guesses where you have missed are marked as \'M\' \n " +
                 "Select New game to start playing!");
+                Console.ReadLine();// waits for user input
         }
         /// <summary>
         /// creates blank grids and varibles , reads 
@@ -234,6 +235,7 @@ namespace BattleBoats
             if (gameState != "saved")
             {
                 Console.WriteLine($"the winner was {gameState}! who won in {gameNum} turns");
+                Thread.Sleep(5000);
             }
         }
         /// <summary>
