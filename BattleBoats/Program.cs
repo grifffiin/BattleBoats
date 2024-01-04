@@ -445,23 +445,63 @@ namespace BattleBoats
 
             for (int i = 0; i < boatType.Length; i++)
             {
-                int[] centre = {playerGrid.GetLength(0)/2, playerGrid.GetLength(1) / 2 };
+                int[] BoatCentre = {playerGrid.GetLength(0)/2, playerGrid.GetLength(1) / 2 };
                 char[,] updatedGrid = new char[playerGrid.GetLength(0),playerGrid.GetLength(1)];
                 Array.Copy(playerGrid, updatedGrid, playerGrid.Length);
                 // creates a copy of the array (not just a reference)
                 for (int f = 0; f<= (boatLength[i] / 2); f++)
                 {
-                    updatedGrid[centre[0]+f,centre[1]] = boatType[i];
-                    updatedGrid[centre[0]-f, centre[1]] = boatType[i];
+                    updatedGrid[BoatCentre[0]+f,BoatCentre[1]] = boatType[i];
+                    updatedGrid[BoatCentre[0]-f, BoatCentre[1]] = boatType[i];
                 }
-                for (int f = 0; f < 5; f++)
-                {
-                    RefreshGrids(updatedGrid, hitsAndMissesGrid, computerGrid);
-                    Thread.Sleep(1000);
-                    RefreshGrids(playerGrid, hitsAndMissesGrid, computerGrid);
-                    Thread.Sleep(500);
+                RefreshGrids(updatedGrid, hitsAndMissesGrid, computerGrid);
+                ConsoleKeyInfo keyPressed;
 
-                }
+                do
+                {
+                    keyPressed = Console.ReadKey();
+
+                    switch (keyPressed.Key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            Console.WriteLine("Up Arrow Key pressed");
+                            BoatCentre[0] -= 1;
+                            break;
+
+                        case ConsoleKey.DownArrow:
+                            Console.WriteLine("Down Arrow Key pressed");
+                            BoatCentre[0] += 1;
+                            break;
+
+                        case ConsoleKey.LeftArrow:
+                            Console.WriteLine("Left Arrow Key pressed");
+                            BoatCentre[1] -= 1;
+                            break;
+
+                        case ConsoleKey.RightArrow:
+                            Console.WriteLine("Right Arrow Key pressed");
+                            BoatCentre[1] += 1;
+                            break;
+
+
+                        default:
+
+                            break;
+                       
+                    }
+                    updatedGrid = MoveBoat(playerGrid, boatLength[i], BoatCentre, boatType[i]);
+                    RefreshGrids(updatedGrid, hitsAndMissesGrid, computerGrid);
+
+                } while (keyPressed.Key != ConsoleKey.Enter);
+
+                //for (int f = 0; f < 5; f++)
+                //{
+                //    RefreshGrids(updatedGrid, hitsAndMissesGrid, computerGrid);
+                //    Thread.Sleep(1000);
+                //    RefreshGrids(playerGrid, hitsAndMissesGrid, computerGrid);
+                //    Thread.Sleep(500);
+
+                //}
                 
 
              // place boat in centre (blinking?)
@@ -474,7 +514,17 @@ namespace BattleBoats
             return playerGrid;
         }
 
-
+        static char[,] MoveBoat(char[,] PlayerGrid,int boatLength, int[] BoatCentre, char boatType)
+        {
+            char[,] newgrid = new char[PlayerGrid.GetLength(0), PlayerGrid.GetLength(1)];
+            Array.Copy(PlayerGrid,newgrid, PlayerGrid.Length);
+            for (int f = 0; f <= (boatLength / 2); f++)
+            {
+                newgrid[BoatCentre[0] + f, BoatCentre[1]] = boatType;
+                newgrid[BoatCentre[0] - f, BoatCentre[1]] = boatType;
+            }
+            return newgrid;
+        }
 
         /// <summary>
         /// generate random coordinates until you get 5 valid ones
