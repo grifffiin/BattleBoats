@@ -493,6 +493,7 @@ namespace BattleBoats
                     RefreshGrids(updatedGrid, hitsAndMissesGrid, computerGrid);
 
                 } while (keyPressed.Key != ConsoleKey.Enter);
+                playerGrid = updatedGrid;
 
                 //for (int f = 0; f < 5; f++)
                 //{
