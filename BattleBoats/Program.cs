@@ -493,6 +493,43 @@ namespace BattleBoats
                     RefreshGrids(updatedGrid, hitsAndMissesGrid, computerGrid);
 
                 } while (keyPressed.Key != ConsoleKey.Enter);
+
+                // change this to a rotate case/switch
+                do
+                {
+                    keyPressed = Console.ReadKey();
+
+                    switch (keyPressed.Key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            Console.WriteLine("Up Arrow Key pressed");
+                            BoatCentre[0] -= 1;
+                            break;
+
+                        case ConsoleKey.DownArrow:
+                            Console.WriteLine("Down Arrow Key pressed");
+                            BoatCentre[0] += 1;
+                            break;
+
+                        case ConsoleKey.LeftArrow:
+                            Console.WriteLine("Left Arrow Key pressed");
+                            BoatCentre[1] -= 1;
+                            break;
+
+                        case ConsoleKey.RightArrow:
+                            Console.WriteLine("Right Arrow Key pressed");
+                            BoatCentre[1] += 1;
+                            break;
+
+                        default:
+
+                            break;
+
+                    }
+                    updatedGrid = MoveBoat(playerGrid, boatLength[i], BoatCentre, boatType[i]);
+                    RefreshGrids(updatedGrid, hitsAndMissesGrid, computerGrid);
+
+                } while (keyPressed.Key != ConsoleKey.Enter);
                 playerGrid = updatedGrid;
 
                 //for (int f = 0; f < 5; f++)
