@@ -495,30 +495,29 @@ namespace BattleBoats
                 } while (keyPressed.Key != ConsoleKey.Enter);
 
                 // change this to a rotate case/switch
+                int x = 0;
+                int y = 0;
                 do
                 {
                     keyPressed = Console.ReadKey();
 
                     switch (keyPressed.Key)
                     {
-                        case ConsoleKey.UpArrow:
-                            Console.WriteLine("Up Arrow Key pressed");
-                            BoatCentre[0] -= 1;
-                            break;
-
-                        case ConsoleKey.DownArrow:
-                            Console.WriteLine("Down Arrow Key pressed");
-                            BoatCentre[0] += 1;
-                            break;
 
                         case ConsoleKey.LeftArrow:
                             Console.WriteLine("Left Arrow Key pressed");
-                            BoatCentre[1] -= 1;
+                            if (x == 0) { x = 1; }
+                            else { x = 0; }
+                            if (y == 0) { y = 1; }
+                            else { y = 0; }
                             break;
 
                         case ConsoleKey.RightArrow:
                             Console.WriteLine("Right Arrow Key pressed");
-                            BoatCentre[1] += 1;
+                            if (x == 0) { x = -1; }
+                            else { x = 0; }
+                            if (y == 0) { y = -1; }
+                            else { y = 0; }
                             break;
 
                         default:
@@ -526,11 +525,11 @@ namespace BattleBoats
                             break;
 
                     }
-                    updatedGrid = MoveBoat(playerGrid, boatLength[i], BoatCentre, boatType[i]);
+                    //updatedGrid = RotateBoat(playerGrid, boatLength[i], BoatCentre, boatType[i], x,y);
                     RefreshGrids(updatedGrid, hitsAndMissesGrid, computerGrid);
 
-                } while (keyPressed.Key != ConsoleKey.Enter);
-                playerGrid = updatedGrid;
+                } while (keyPressed.Key != ConsoleKey.Enter);// press enter to submit the current movment of the boat
+                playerGrid = updatedGrid; //boat is placed on grid
 
                 //for (int f = 0; f < 5; f++)
                 //{
@@ -555,7 +554,7 @@ namespace BattleBoats
         static char[,] MoveBoat(char[,] PlayerGrid,int boatLength, int[] BoatCentre, char boatType)
         {
             char[,] newgrid = new char[PlayerGrid.GetLength(0), PlayerGrid.GetLength(1)];
-            Array.Copy(PlayerGrid,newgrid, PlayerGrid.Length);
+            Array.Copy(PlayerGrid,newgrid, PlayerGrid.Length); // creates a copy of playergrid for player to preview boats on
             for (int f = 0; f <= (boatLength / 2); f++)
             {
                 newgrid[BoatCentre[0] + f, BoatCentre[1]] = boatType;
@@ -564,6 +563,41 @@ namespace BattleBoats
             return newgrid;
         }
 
+
+        static char[,] RotateBoat(char[,] PlayerGrid, char[,] UpdatedGrid, int boatLength, int[] BoatCentre, char boatType,int x , int y)
+        {
+            char[,] newgrid = new char[PlayerGrid.GetLength(0), PlayerGrid.GetLength(1)];
+            Array.Copy(PlayerGrid, newgrid, PlayerGrid.Length);
+            // you need a way to identify the boat being placed vs boats that already exist on the grid
+            // locate the chars for the current boat:
+            char[,] boatChars = new char[2, boatLength];
+            int boatCharNum = 0;
+            for (int t =0; t<PlayerGrid.GetLength(0); t++)
+            {
+                for (int m= 0; m < PlayerGrid.GetLength(1); m++)
+                {
+                    if (PlayerGrid[t,m]!= UpdatedGrid[t,m])
+                    {
+                        boatChars[0, boatCharNum] = UpdatedGrid[t, m];//this will not work if the boat is overlapping another of the same type of boat (this should not happen anyway)
+                    }
+                }
+            }
+
+
+
+
+
+
+
+            for (int f = 0; f <= (boatLength / 2); f++)
+            {
+                newgrid[BoatCentre[0] + x+f, BoatCentre[1]+y] = boatType;
+                newgrid[BoatCentre[0] - x+f, BoatCentre[1]-y] = boatType;
+                // use rotation matrices to rotate the boats
+                // if this is 0 or negative then you dont want to increment by +1
+            }
+            return newgrid;
+        }
         /// <summary>
         /// generate random coordinates until you get 5 valid ones
         /// assign those coordinates as boats on a grid
